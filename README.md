@@ -1,4 +1,4 @@
-# VibeCheck
+# Pact
 
 > Smart contracts that understand creative intent.
 
@@ -8,7 +8,7 @@ AI-powered escrow and dispute resolution for creative work, built on [GenLayer](
 
 ## What it does
 
-VibeCheck lets buyers and sellers agree on creative work (logos, copy, code, design) with escrow enforced and disputes resolved automatically by an on-chain AI judge.
+Pact lets buyers and sellers agree on creative work (logos, copy, code, design) with escrow enforced and disputes resolved automatically by an on-chain AI judge.
 
 | Step | Who | What |
 |------|-----|-------|

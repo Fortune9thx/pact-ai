@@ -13,7 +13,7 @@ function getPageMeta(pathname: string) {
   if (pageTitles[pathname]) return pageTitles[pathname];
   if (pathname.startsWith("/deal/")) return { title: "Deal Details", description: "View deal status and AI verdict" };
   if (pathname.startsWith("/submit/")) return { title: "Submit Work", description: "Upload your creative submission" };
-  return { title: "VibeCheck", description: "" };
+  return { title: "Pact", description: "" };
 }
 
 export function Header() {

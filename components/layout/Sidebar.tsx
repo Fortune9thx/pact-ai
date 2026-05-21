@@ -34,7 +34,7 @@ export function Sidebar() {
         </div>
         <div>
           <p className="text-sm font-semibold tracking-tight text-[var(--color-foreground)]">
-            VibeCheck
+            Pact
           </p>
           <p className="text-[10px] text-[var(--color-muted-foreground)]">GenLayer Testnet</p>
         </div>

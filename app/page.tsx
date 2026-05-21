@@ -66,7 +66,7 @@ export default function LandingPage() {
             <div className="flex size-7 items-center justify-center rounded-lg bg-[var(--color-primary)]/15 border border-[var(--color-primary)]/25">
               <Zap className="size-3.5 text-[var(--color-primary)]" />
             </div>
-            <span className="text-sm font-semibold tracking-tight">VibeCheck</span>
+            <span className="text-sm font-semibold tracking-tight">Pact</span>
             <Badge variant="default" className="text-[10px] px-1.5 py-0">Testnet</Badge>
           </div>
           <div className="flex items-center gap-3">
@@ -104,7 +104,7 @@ export default function LandingPage() {
             variants={fadeUp} initial="hidden" animate="show" custom={2}
             className="text-lg text-[var(--color-muted-foreground)] max-w-2xl mx-auto mb-9 leading-relaxed text-balance"
           >
-            VibeCheck enables AI-powered escrow resolution for creative work, subjective agreements,
+            Pact enables AI-powered escrow resolution for creative work, subjective agreements,
             and quality-based outcomes — enforced on-chain by GenLayer&apos;s intelligent contracts.
           </motion.p>
 
@@ -250,7 +250,7 @@ export default function LandingPage() {
           >
             <h2 className="text-3xl font-bold tracking-tight mb-3">Built for creative work</h2>
             <p className="text-[var(--color-muted-foreground)] max-w-xl mx-auto">
-              Any agreement where quality is subjective — VibeCheck makes it objective.
+              Any agreement where quality is subjective — Pact makes it objective.
             </p>
           </motion.div>
 
@@ -312,7 +312,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Zap className="size-3.5 text-[var(--color-primary)]" />
-            <span className="text-sm font-semibold">VibeCheck</span>
+            <span className="text-sm font-semibold">Pact</span>
             <span className="text-xs text-[var(--color-muted-foreground)]">· Built on GenLayer</span>
           </div>
           <p className="text-xs text-[var(--color-muted-foreground)]">
