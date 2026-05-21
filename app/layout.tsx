@@ -18,6 +18,13 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className="h-full antialiased">
+      <head>
+        <link rel="preconnect" href="https://api.fontshare.com" />
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="min-h-full bg-[var(--color-background)] text-[var(--color-foreground)]">
         {children}
         <TransactionStatus />

@@ -1,65 +1,70 @@
+@import url("https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 @import "tailwindcss";
 
 /* ── Tailwind v4 CSS-first theme ─────────────────────────────── */
 @theme {
-  /* Typography */
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  /* Typography — Switzer first, Inter fallback */
+  --font-sans: "Switzer", "Inter", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
 
-  /* ── Backgrounds — matte platinum / brushed titanium ── */
-  --color-background: oklch(93% 0.009 252);
-  --color-foreground: oklch(11% 0.012 260);
+  /* ── Canvas & Surfaces ── */
+  --color-background: oklch(97% 0.003 248);       /* #F8F9FA — clean alabaster */
+  --color-foreground: oklch(11% 0.012 260);        /* near-black obsidian */
 
-  /* Surface layers — each step subtly brighter than the canvas */
-  --color-surface: oklch(95% 0.007 252);
-  --color-surface-raised: oklch(97.5% 0.004 252);
-  --color-surface-overlay: oklch(99.5% 0.002 252);
+  --color-surface: oklch(100% 0 0);               /* pure white */
+  --color-surface-raised: oklch(97.5% 0.003 248); /* #F8F9FA */
+  --color-surface-overlay: oklch(100% 0 0);       /* pure white */
 
-  /* ── Primary — deep eggplant purple (#3d137d) ── */
-  --color-primary: oklch(32% 0.168 294);
+  /* ── GenLayer Brand — Electric Blue primary ── */
+  --color-primary: oklch(44% 0.308 265);          /* #110FFF Electric Blue */
   --color-primary-foreground: oklch(100% 0 0);
-  --color-primary-subtle: oklch(32% 0.168 294 / 0.08);
+  --color-primary-subtle: oklch(44% 0.308 265 / 0.08);
 
-  /* Secondary — elevated surface with border */
-  --color-secondary: oklch(97.5% 0.004 252);
-  --color-secondary-foreground: oklch(22% 0.012 260);
+  /* GenLayer brand palette */
+  --color-brand-electric: oklch(44% 0.308 265);   /* #110FFF */
+  --color-brand-lavender: oklch(74% 0.115 289);   /* #BCA2FF */
+  --color-brand-deep: oklch(22% 0.089 266);       /* #282B5D */
+
+  /* Secondary */
+  --color-secondary: oklch(97% 0.003 248);
+  --color-secondary-foreground: oklch(22% 0.089 266);
 
   /* Muted */
-  --color-muted: oklch(89.5% 0.010 252);
-  --color-muted-foreground: oklch(46% 0.012 258);
+  --color-muted: oklch(94% 0.005 252);
+  --color-muted-foreground: oklch(50% 0.012 258);
 
-  /* Accent — lighter purple variant */
-  --color-accent: oklch(42% 0.158 294);
-  --color-accent-foreground: oklch(100% 0 0);
+  /* Accent — lavender */
+  --color-accent: oklch(74% 0.115 289);           /* #BCA2FF */
+  --color-accent-foreground: oklch(22% 0.089 266);
 
   /* Destructive */
   --color-destructive: oklch(51% 0.22 25);
   --color-destructive-foreground: oklch(100% 0 0);
 
-  /* Cards — white-silver float above the titanium canvas */
-  --color-card: oklch(97.5% 0.004 252);
+  /* Cards — pure white on alabaster canvas */
+  --color-card: oklch(100% 0 0);
   --color-card-foreground: oklch(11% 0.012 260);
 
   /* Popover */
-  --color-popover: oklch(99.5% 0.002 252);
+  --color-popover: oklch(100% 0 0);
   --color-popover-foreground: oklch(11% 0.012 260);
 
   /* UI chrome */
-  --color-border: oklch(85% 0.011 253);
-  --color-input: oklch(97.5% 0.004 252);
-  --color-ring: oklch(32% 0.168 294);
+  --color-border: oklch(88% 0.007 252);
+  --color-input: oklch(100% 0 0);
+  --color-ring: oklch(44% 0.308 265);
 
-  /* Verdict states — refined, not neon */
+  /* Verdict states */
   --color-verdict-pass: oklch(49% 0.165 145);
   --color-verdict-fail: oklch(50% 0.215 25);
   --color-verdict-pending: oklch(56% 0.160 75);
 
-  /* Deal status — all non-green/amber states use the purple family */
-  --color-status-active: oklch(32% 0.168 294);
+  /* Deal status */
+  --color-status-active: oklch(44% 0.308 265);
   --color-status-disputed: oklch(56% 0.160 75);
   --color-status-resolved: oklch(49% 0.165 145);
-  --color-status-funded: oklch(38% 0.158 294);
+  --color-status-funded: oklch(74% 0.115 289);
 
   /* Border radius */
   --radius-sm: 0.375rem;
@@ -68,10 +73,11 @@
   --radius-xl: 0.75rem;
   --radius-2xl: 1rem;
 
-  /* Shadows — refined for light silver surfaces */
-  --shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 1px 4px 0 rgb(0 0 0 / 0.06);
-  --shadow-card-hover: 0 4px 16px 0 rgb(0 0 0 / 0.08), 0 2px 6px -2px rgb(0 0 0 / 0.06);
-  --shadow-glow: 0 0 0 1px oklch(32% 0.168 294 / 0.18), 0 0 20px -4px oklch(32% 0.168 294 / 0.12);
+  /* Shadows — brand-tinted depth */
+  --shadow-card: 0 1px 2px 0 rgba(0,0,0,0.04), 0 1px 4px 0 rgba(0,0,0,0.04);
+  --shadow-card-hover: 0 30px 60px -15px rgba(40,43,93,0.08), 0 10px 20px -10px rgba(17,15,255,0.04);
+  --shadow-glow: 0 0 0 1px oklch(44% 0.308 265 / 0.18), 0 0 20px -4px oklch(44% 0.308 265 / 0.12);
+  --shadow-elevation: 0 30px 60px -15px rgba(40,43,93,0.08), 0 10px 20px -10px rgba(17,15,255,0.04);
 
   /* Animations */
   --animate-fade-in: fade-in 0.3s ease-out;
@@ -94,6 +100,10 @@
     0%, 100% { opacity: 1; }
     50%       { opacity: 0.5; }
   }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.55; transform: scale(0.82); }
+  }
 }
 
 /* ── Base styles ──────────────────────────────────────────────── */
@@ -115,16 +125,16 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1;
 }
 
-/* Custom scrollbar — light-adapted */
+/* Custom scrollbar */
 ::-webkit-scrollbar        { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track  { background: transparent; }
 ::-webkit-scrollbar-thumb  { background: var(--color-border); border-radius: 9999px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-muted-foreground); }
 
-/* Selection */
+/* Selection — brand blue tint */
 ::selection {
-  background-color: oklch(32% 0.168 294 / 0.15);
-  color: oklch(8% 0.010 294);
+  background-color: oklch(44% 0.308 265 / 0.12);
+  color: oklch(22% 0.089 266);
 }
 
 /* ── Utility classes ──────────────────────────────────────────── */
@@ -134,22 +144,145 @@ body {
 }
 
 .surface-glass {
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  background-color: oklch(95% 0.007 252 / 0.88);
-  border: 1px solid oklch(86% 0.009 253 / 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(202, 202, 202, 0.35);
 }
 
 .text-balance {
   text-wrap: balance;
 }
 
-.gradient-hero {
-  background: radial-gradient(ellipse 80% 50% at 50% -5%, oklch(32% 0.168 294 / 0.05) 0%, transparent 65%);
+/* Blueprint grid — structural depth layer */
+.blueprint-grid {
+  background-image:
+    linear-gradient(rgba(202, 202, 202, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(202, 202, 202, 0.12) 1px, transparent 1px);
+  background-size: 50px 50px;
 }
 
+/* Hero radial gradient — Electric Blue */
+.gradient-hero {
+  background: radial-gradient(
+    ellipse 70% 55% at 50% -5%,
+    oklch(44% 0.308 265 / 0.06) 0%,
+    transparent 70%
+  );
+}
+
+/* Shimmer skeleton */
 .shimmer-bg {
-  background: linear-gradient(90deg, transparent 0%, oklch(93.5% 0.008 252) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, oklch(97% 0.003 248) 50%, transparent 100%);
   background-size: 200% 100%;
   animation: var(--animate-shimmer);
+}
+
+/* ── Elevation System ─────────────────────────────────────────── */
+/*
+ * .elevating-card — lifts on hover, springs on active.
+ * Uses a ::before pseudo-element for the under-glow effect.
+ * Apply will-change and isolation for GPU compositing.
+ */
+.elevating-card {
+  position: relative;
+  will-change: transform, opacity;
+  transition:
+    transform 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.35s ease;
+  isolation: isolate;
+}
+
+/* Gradient glow layer behind the card */
+.elevating-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    oklch(74% 0.115 289),   /* lavender #BCA2FF */
+    oklch(44% 0.308 265)    /* electric #110FFF */
+  );
+  opacity: 0;
+  filter: blur(16px);
+  z-index: -1;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+/* Hover — lift + depth shadow + reveal glow */
+.elevating-card:hover {
+  transform: translateY(-4px) scale(1.005);
+  box-shadow:
+    0 30px 60px -15px rgba(40, 43, 93, 0.08),
+    0 10px 20px -10px rgba(17, 15, 255, 0.05);
+}
+.elevating-card:hover::before {
+  opacity: 0.12;
+}
+
+/* Active — tactile push */
+.elevating-card:active {
+  transform: translateY(1px) scale(0.995);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  transition-duration: 0.08s;
+  border-color: oklch(74% 0.115 289) !important; /* lavender flash on press */
+}
+.elevating-card:active::before {
+  opacity: 0;
+}
+
+/* ── Magnetic Border System ───────────────────────────────────── */
+/*
+ * .magnetic-card — cursor-tracking gradient border.
+ * JS sets --mouse-x / --mouse-y on pointermove.
+ * Falls back to static gradient border if JS unavailable.
+ */
+.magnetic-card {
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+  position: relative;
+  isolation: isolate;
+}
+
+/* The 1-px border layer with radial gradient mask */
+.magnetic-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    circle 120px at var(--mouse-x) var(--mouse-y),
+    oklch(44% 0.308 265 / 0.7),
+    transparent 70%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+.magnetic-card:hover::after {
+  opacity: 1;
+}
+
+/* Static gradient border fallback (touch devices / no hover) */
+@media (hover: none) {
+  .magnetic-card::after {
+    background: linear-gradient(
+      135deg,
+      oklch(74% 0.115 289 / 0.35),
+      oklch(44% 0.308 265 / 0.35)
+    );
+    opacity: 0.6;
+  }
 }
