@@ -1,26 +1,155 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ── Tailwind v4 CSS-first theme ─────────────────────────────── */
+@theme {
+  /* Typography */
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* ── Backgrounds — matte platinum / brushed titanium ── */
+  --color-background: oklch(93% 0.009 252);
+  --color-foreground: oklch(11% 0.012 260);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Surface layers — each step subtly brighter than the canvas */
+  --color-surface: oklch(95% 0.007 252);
+  --color-surface-raised: oklch(97.5% 0.004 252);
+  --color-surface-overlay: oklch(99.5% 0.002 252);
+
+  /* ── Primary — deep eggplant purple (#3d137d) ── */
+  --color-primary: oklch(32% 0.168 294);
+  --color-primary-foreground: oklch(100% 0 0);
+  --color-primary-subtle: oklch(32% 0.168 294 / 0.08);
+
+  /* Secondary — elevated surface with border */
+  --color-secondary: oklch(97.5% 0.004 252);
+  --color-secondary-foreground: oklch(22% 0.012 260);
+
+  /* Muted */
+  --color-muted: oklch(89.5% 0.010 252);
+  --color-muted-foreground: oklch(46% 0.012 258);
+
+  /* Accent — lighter purple variant */
+  --color-accent: oklch(42% 0.158 294);
+  --color-accent-foreground: oklch(100% 0 0);
+
+  /* Destructive */
+  --color-destructive: oklch(51% 0.22 25);
+  --color-destructive-foreground: oklch(100% 0 0);
+
+  /* Cards — white-silver float above the titanium canvas */
+  --color-card: oklch(97.5% 0.004 252);
+  --color-card-foreground: oklch(11% 0.012 260);
+
+  /* Popover */
+  --color-popover: oklch(99.5% 0.002 252);
+  --color-popover-foreground: oklch(11% 0.012 260);
+
+  /* UI chrome */
+  --color-border: oklch(85% 0.011 253);
+  --color-input: oklch(97.5% 0.004 252);
+  --color-ring: oklch(32% 0.168 294);
+
+  /* Verdict states — refined, not neon */
+  --color-verdict-pass: oklch(49% 0.165 145);
+  --color-verdict-fail: oklch(50% 0.215 25);
+  --color-verdict-pending: oklch(56% 0.160 75);
+
+  /* Deal status — all non-green/amber states use the purple family */
+  --color-status-active: oklch(32% 0.168 294);
+  --color-status-disputed: oklch(56% 0.160 75);
+  --color-status-resolved: oklch(49% 0.165 145);
+  --color-status-funded: oklch(38% 0.158 294);
+
+  /* Border radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+
+  /* Shadows — refined for light silver surfaces */
+  --shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 1px 4px 0 rgb(0 0 0 / 0.06);
+  --shadow-card-hover: 0 4px 16px 0 rgb(0 0 0 / 0.08), 0 2px 6px -2px rgb(0 0 0 / 0.06);
+  --shadow-glow: 0 0 0 1px oklch(32% 0.168 294 / 0.18), 0 0 20px -4px oklch(32% 0.168 294 / 0.12);
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-slide-in: slide-in 0.2s ease-out;
+  --animate-shimmer: shimmer 2s linear infinite;
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slide-in {
+    from { opacity: 0; transform: translateX(-8px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position:  200% 0; }
+  }
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.5; }
   }
 }
 
+/* ── Base styles ──────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  border-color: var(--color-border);
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Custom scrollbar — light-adapted */
+::-webkit-scrollbar        { width: 5px; height: 5px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--color-border); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-muted-foreground); }
+
+/* Selection */
+::selection {
+  background-color: oklch(32% 0.168 294 / 0.15);
+  color: oklch(8% 0.010 294);
+}
+
+/* ── Utility classes ──────────────────────────────────────────── */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+}
+
+.surface-glass {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background-color: oklch(95% 0.007 252 / 0.88);
+  border: 1px solid oklch(86% 0.009 253 / 0.75);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.gradient-hero {
+  background: radial-gradient(ellipse 80% 50% at 50% -5%, oklch(32% 0.168 294 / 0.05) 0%, transparent 65%);
+}
+
+.shimmer-bg {
+  background: linear-gradient(90deg, transparent 0%, oklch(93.5% 0.008 252) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
 }
