@@ -87,24 +87,24 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
 
 /* ── Data ───────────────────────────────────────────────────────── */
 const steps = [
-  { n: "01", title: "Buyer creates a deal", description: "Describe the work, set quality standards in plain language, fund escrow with GEN tokens.", icon: PenTool },
-  { n: "02", title: "Seller submits work", description: "Deliver the completed work via URL or file upload. The submission is recorded on-chain.", icon: ImageIcon },
-  { n: "03", title: "AI evaluates quality", description: "GenLayer's AI validators analyze the submission against the brief — style, alignment, quality.", icon: Brain },
-  { n: "04", title: "Escrow resolves", description: "If the work passes, escrow releases to the seller. If not, the buyer is refunded automatically.", icon: Banknote },
+  { n: "01", title: "Write your brief", description: "Describe the work in plain language. Set escrow in GEN. Get a shareable invite link — no seller wallet needed.", icon: PenTool },
+  { n: "02", title: "Invite your creative", description: "Send the link via Discord, WhatsApp, or email. They preview the agreement and accept with one click.", icon: ArrowRight },
+  { n: "03", title: "Review the delivery", description: "Approve work directly to release payment. If you need a second opinion, request an AI review.", icon: CheckCircle2 },
+  { n: "04", title: "AI advises, you decide", description: "GenLayer AI evaluates style, alignment, and quality against your brief. You make the final call.", icon: Brain },
 ];
 
 const useCases = [
-  { icon: ImageIcon, title: "Logo & Brand Design", description: "Specify style, tone, and aesthetic. AI verifies visual quality standards." },
-  { icon: FileText, title: "Copywriting & Content", description: "Define tone of voice and message. AI checks alignment and quality." },
-  { icon: Code2, title: "Code & Technical Work", description: "Describe functionality requirements. AI validates implementation quality." },
-  { icon: PenTool, title: "Creative Campaigns", description: "Brief creative direction. AI evaluates conceptual and visual execution." },
+  { icon: ImageIcon, title: "Logo & Brand Design", description: "Hire a designer from Twitter. Send a Pact link. Get protected delivery with AI as your quality check." },
+  { icon: FileText, title: "Copywriting & Content", description: "Brief a writer from your network. Escrow protects both sides. No payment before delivery." },
+  { icon: Code2, title: "Code & Technical Work", description: "Commission a developer. Clear requirements in the brief. AI validates against your spec if needed." },
+  { icon: PenTool, title: "Creative Campaigns", description: "Work with agencies or freelancers you know. Pact adds a trust layer without the overhead." },
 ];
 
 const valueBlocks = [
-  { icon: Shield,       title: "Trustless escrow",    sub: "Funds locked on-chain" },
-  { icon: Brain,        title: "AI-powered verdicts", sub: "GenLayer intelligent contracts" },
-  { icon: CheckCircle2, title: "On-chain resolution", sub: "No intermediaries" },
-  { icon: Clock,        title: "No manual disputes",  sub: "Automated settlement" },
+  { icon: Shield,       title: "No upfront wallet",  sub: "Share a link, not an address" },
+  { icon: Brain,        title: "AI review on demand", sub: "Advisory, not autonomous" },
+  { icon: CheckCircle2, title: "You decide",          sub: "Buyer retains final control" },
+  { icon: Clock,        title: "Dispute protection",  sub: "AI explains every recommendation" },
 ];
 
 const verdictExample = {
@@ -215,13 +215,13 @@ export default function LandingPage() {
               color: DEEP,
             }}
           >
-            Smart contracts that<br />
-            understand{" "}
+            Protect your creative work.<br />
+            Resolve disputes with{" "}
             <span
               className="bg-clip-text text-transparent"
               style={{ backgroundImage: `linear-gradient(90deg, ${DEEP}, ${ELECTRIC})` }}
             >
-              nuance.
+              AI.
             </span>
           </motion.h1>
 
@@ -230,8 +230,8 @@ export default function LandingPage() {
             variants={fadeUp} initial="hidden" animate="show" custom={2}
             className="text-lg text-[var(--color-muted-foreground)] max-w-2xl mx-auto mb-9 leading-relaxed text-balance"
           >
-            Pact enables AI-powered escrow resolution for creative work, subjective agreements,
-            and quality-based outcomes — enforced on-chain by GenLayer&apos;s intelligent contracts.
+            Escrow protection for creative work you&apos;re already doing. Invite your designer, writer, or developer
+            via link — no crypto knowledge required. AI helps resolve disputes if they arise. You decide.
           </motion.p>
 
           {/* CTAs */}
@@ -245,7 +245,7 @@ export default function LandingPage() {
                 className="gap-2 w-full sm:w-auto"
                 style={{ background: ELECTRIC }}
               >
-                Create a Deal
+                Protect my next project
                 <ArrowRight className="size-4" />
               </Button>
             </Link>
@@ -302,7 +302,7 @@ export default function LandingPage() {
               How it works
             </h2>
             <p className="text-[var(--color-muted-foreground)] max-w-xl mx-auto">
-              Four steps from brief to resolution, handled entirely on-chain.
+              Built for people who already work together — and want protection without friction.
             </p>
           </motion.div>
 
@@ -354,11 +354,11 @@ export default function LandingPage() {
               className="text-3xl font-bold mb-3"
               style={{ letterSpacing: "-0.025em", color: DEEP }}
             >
-              Why subjective contracts matter
+              AI as your review assistant
             </h2>
             <p className="text-[var(--color-muted-foreground)] max-w-xl mx-auto">
-              Traditional smart contracts can&apos;t evaluate &quot;quality&quot; or &quot;style.&quot; GenLayer&apos;s AI-powered
-              intelligent contracts can.
+              When quality is disputed, the AI evaluates against your brief and gives a recommendation.
+              You retain full control — approve, reject, or override.
             </p>
           </motion.div>
 
@@ -408,7 +408,7 @@ export default function LandingPage() {
                       </span>
                     </div>
                     <p className="text-xs text-[var(--color-muted-foreground)] mt-0.5">
-                      Escrow released to seller automatically
+                      AI recommends approval — buyer confirms to release escrow
                     </p>
                   </div>
                 </div>
@@ -444,10 +444,10 @@ export default function LandingPage() {
               className="text-3xl font-bold mb-3"
               style={{ letterSpacing: "-0.025em", color: DEEP }}
             >
-              Built for creative work
+              For the work you&apos;re already doing
             </h2>
             <p className="text-[var(--color-muted-foreground)] max-w-xl mx-auto">
-              Any agreement where quality is subjective — Pact makes it objective.
+              Pact works with existing relationships — not a new marketplace to join.
             </p>
           </motion.div>
 
@@ -495,10 +495,10 @@ export default function LandingPage() {
                   className="text-4xl font-bold mb-4"
                   style={{ letterSpacing: "-0.03em", color: DEEP }}
                 >
-                  Ready to resolve creative<br />disputes on-chain?
+                  Protect your next<br />creative agreement
                 </h2>
                 <p className="text-[var(--color-muted-foreground)] mb-8 leading-relaxed max-w-md mx-auto">
-                  Get free GEN tokens from the testnet faucet and start your first deal in under two minutes.
+                  Write the brief, lock escrow, send an invite link. Your creative accepts in seconds — no crypto setup required on their end.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Link href="/create">
@@ -507,7 +507,7 @@ export default function LandingPage() {
                       className="gap-2 w-full sm:w-auto"
                       style={{ background: ELECTRIC }}
                     >
-                      Start your first deal
+                      Create a protected agreement
                       <ArrowRight className="size-4" />
                     </Button>
                   </Link>

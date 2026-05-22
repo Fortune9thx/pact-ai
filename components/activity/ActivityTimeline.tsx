@@ -2,7 +2,7 @@
 
 import { cn, formatTimeAgo, truncateAddress } from "@/lib/utils";
 import type { Deal } from "@/lib/types";
-import { PlusCircle, DollarSign, Upload, AlertTriangle, CheckCircle2, XCircle, Zap } from "lucide-react";
+import { PlusCircle, DollarSign, Upload, Brain, CheckCircle2, XCircle, Zap, UserCheck, ThumbsUp } from "lucide-react";
 
 interface TimelineEvent {
   label: string;
@@ -15,55 +15,99 @@ interface TimelineEvent {
 function buildTimeline(deal: Deal): TimelineEvent[] {
   const events: TimelineEvent[] = [];
   const now = Math.floor(Date.now() / 1000);
+  const base = deal.createdAt || now - 3600;
 
+  // 1. Agreement created
   events.push({
-    label: "Deal Created",
-    description: `Buyer ${truncateAddress(deal.buyer)} created escrow for creative work`,
+    label: "Agreement Created",
+    description: `Buyer ${truncateAddress(deal.buyer)} created a protected creative agreement`,
     icon: PlusCircle,
     color: "text-[var(--color-primary)]",
-    timestamp: deal.createdAt || now - 3600,
+    timestamp: base,
   });
 
-  if (["FUNDED", "SUBMITTED", "DISPUTED", "RESOLVED_PASS", "RESOLVED_FAIL"].includes(deal.status)) {
+  // 2. Seller claimed (FUNDED+)
+  if (deal.seller && ["FUNDED", "SUBMITTED", "AI_REVIEWED", "RESOLVED_PASS", "RESOLVED_FAIL"].includes(deal.status)) {
     events.push({
-      label: "Escrow Funded",
-      description: `${deal.amount} GEN locked in smart contract`,
-      icon: DollarSign,
+      label: "Escrow Active",
+      description: `Seller ${truncateAddress(deal.seller)} accepted — ${deal.amount} GEN locked in escrow`,
+      icon: UserCheck,
       color: "text-[var(--color-status-funded)]",
-      timestamp: deal.createdAt || now - 3500,
+      timestamp: base + 600,
     });
   }
 
-  if (deal.submission && ["SUBMITTED", "DISPUTED", "RESOLVED_PASS", "RESOLVED_FAIL"].includes(deal.status)) {
+  // 3. Work submitted
+  if (deal.submission && ["SUBMITTED", "AI_REVIEWED", "RESOLVED_PASS", "RESOLVED_FAIL"].includes(deal.status)) {
     events.push({
       label: "Work Submitted",
-      description: `Seller ${truncateAddress(deal.seller)} delivered creative work`,
+      description: deal.seller
+        ? `Seller ${truncateAddress(deal.seller)} delivered the creative work`
+        : "Creative work delivered",
       icon: Upload,
       color: "text-[var(--color-foreground)]",
-      timestamp: deal.createdAt ? deal.createdAt + 3600 : now - 1800,
+      timestamp: base + 3600,
     });
   }
 
-  if (["DISPUTED", "RESOLVED_PASS", "RESOLVED_FAIL"].includes(deal.status)) {
+  // 4. AI review requested
+  if (["AI_REVIEWED", "RESOLVED_PASS", "RESOLVED_FAIL"].includes(deal.status) && deal.aiVerdict) {
     events.push({
-      label: "AI Evaluation Requested",
-      description: "Buyer raised dispute — GenLayer AI validators initiated",
-      icon: AlertTriangle,
-      color: "text-[var(--color-status-disputed)]",
-      timestamp: deal.createdAt ? deal.createdAt + 7200 : now - 900,
+      label: "AI Review Requested",
+      description: "Buyer requested AI evaluation — GenLayer validators analyzed the submission",
+      icon: Brain,
+      color: "text-[var(--color-primary)]",
+      timestamp: deal.aiVerdict.evaluated_at || base + 7200,
     });
   }
 
-  if (deal.aiVerdict && ["RESOLVED_PASS", "RESOLVED_FAIL"].includes(deal.status)) {
+  // 5. AI verdict delivered
+  if (deal.aiVerdict) {
     const pass = deal.aiVerdict.result === "PASS";
     events.push({
-      label: pass ? "Work Approved by AI" : "Work Rejected by AI",
+      label: pass ? "AI Recommends Approval" : "AI Recommends Rejection",
       description: pass
-        ? `Escrow released to seller — ${deal.aiVerdict.confidence}% confidence`
-        : `Escrow refunded to buyer — ${deal.aiVerdict.confidence}% confidence`,
+        ? `AI review complete — ${deal.aiVerdict.confidence}% confidence in approval`
+        : `AI review complete — ${deal.aiVerdict.confidence}% confidence in rejection`,
+      icon: Brain,
+      color: pass ? "text-[var(--color-verdict-pass)]" : "text-[var(--color-verdict-fail)]",
+      timestamp: (deal.aiVerdict.evaluated_at || base + 7200) + 60,
+    });
+  }
+
+  // 6. Buyer approved directly (no AI)
+  if (deal.status === "RESOLVED_PASS" && !deal.aiVerdict) {
+    events.push({
+      label: "Work Approved",
+      description: "Buyer approved the work — escrow released to seller",
+      icon: ThumbsUp,
+      color: "text-[var(--color-verdict-pass)]",
+      timestamp: base + 7200,
+    });
+  }
+
+  // 7. Final resolution
+  if (["RESOLVED_PASS", "RESOLVED_FAIL"].includes(deal.status)) {
+    const pass = deal.status === "RESOLVED_PASS";
+    events.push({
+      label: pass ? "Payment Released" : "Buyer Refunded",
+      description: pass
+        ? "Escrow transferred to seller — agreement complete"
+        : "Escrow returned to buyer — agreement closed",
       icon: pass ? CheckCircle2 : XCircle,
       color: pass ? "text-[var(--color-verdict-pass)]" : "text-[var(--color-verdict-fail)]",
-      timestamp: deal.aiVerdict.evaluatedAt || now - 300,
+      timestamp: base + 7500,
+    });
+  }
+
+  // 8. Cancelled
+  if (deal.status === "CANCELLED") {
+    events.push({
+      label: "Deal Cancelled",
+      description: "Buyer cancelled the agreement before work was submitted",
+      icon: XCircle,
+      color: "text-[var(--color-muted-foreground)]",
+      timestamp: base + 1800,
     });
   }
 
@@ -85,18 +129,12 @@ export function ActivityTimeline({ deal, className }: { deal: Deal; className?: 
           const isLast = i === events.length - 1;
           return (
             <div key={i} className="flex gap-3">
-              {/* Icon + line */}
               <div className="flex flex-col items-center">
-                <div className={cn(
-                  "flex size-7 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface-raised)] border border-[var(--color-border)]",
-                )}>
+                <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface-raised)] border border-[var(--color-border)]">
                   <Icon className={cn("size-3.5", event.color)} />
                 </div>
-                {!isLast && (
-                  <div className="w-px flex-1 bg-[var(--color-border)] my-1" />
-                )}
+                {!isLast && <div className="w-px flex-1 bg-[var(--color-border)] my-1" />}
               </div>
-              {/* Content */}
               <div className={cn("pb-4 flex-1 min-w-0", isLast && "pb-0")}>
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-xs font-semibold text-[var(--color-foreground)]">{event.label}</p>
