@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   PlusCircle,
-  Zap,
   GitBranch,
   BookOpen,
   Beaker,
@@ -35,10 +35,15 @@ export function Sidebar() {
   return (
     <aside className="fixed inset-y-0 left-0 z-20 hidden md:flex w-56 flex-col border-r border-[var(--color-border)] bg-[var(--color-surface)]">
       {/* Logo */}
-      <div className="flex h-14 shrink-0 items-center gap-2.5 px-5 border-b border-[var(--color-border)]">
-        <div className="flex size-7 items-center justify-center rounded-lg bg-[var(--color-primary)]/15 border border-[var(--color-primary)]/25">
-          <Zap className="size-3.5 text-[var(--color-primary)]" />
-        </div>
+      <div className="flex h-14 shrink-0 items-center gap-2.5 px-4 border-b border-[var(--color-border)]">
+        <Image
+          src="/logo.png"
+          alt="Pact"
+          width={36}
+          height={36}
+          className="rounded-lg shrink-0"
+          priority
+        />
         <div>
           <p className="text-sm font-semibold tracking-tight text-[var(--color-foreground)]">
             Pact

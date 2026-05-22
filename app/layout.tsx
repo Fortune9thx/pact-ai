@@ -6,10 +6,15 @@ export const metadata: Metadata = {
   title: "Pact: AI-Powered Creative Escrow",
   description:
     "Smart contracts that understand nuance. AI-powered escrow resolution for creative work and quality-based agreements on GenLayer.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
   openGraph: {
     title: "Pact",
     description: "Smart contracts that understand creative intent.",
     type: "website",
+    images: [{ url: "/logo.png", width: 750, height: 750 }],
   },
 };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -146,12 +147,7 @@ export default function LandingPage() {
         />
         <div className="max-w-6xl mx-auto px-5 md:px-8 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div
-              className="flex size-7 items-center justify-center rounded-lg border"
-              style={{ background: `${ELECTRIC}14`, borderColor: `${ELECTRIC}30` }}
-            >
-              <Zap className="size-3.5" style={{ color: ELECTRIC }} />
-            </div>
+            <Image src="/logo.png" alt="Pact" width={32} height={32} className="rounded-lg" priority />
             <span className="text-sm font-semibold tracking-tight" style={{ color: DEEP }}>Pact</span>
             <span
               className="hidden sm:inline text-[10px] font-medium px-2 py-0.5 rounded-full border"
@@ -537,7 +533,7 @@ export default function LandingPage() {
       <footer className="border-t py-8" style={{ borderColor: BORDER }}>
         <div className="max-w-6xl mx-auto px-5 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <Zap className="size-3.5" style={{ color: ELECTRIC }} />
+            <Image src="/logo.png" alt="Pact" width={24} height={24} className="rounded-md" />
             <span className="text-sm font-semibold" style={{ color: DEEP }}>Pact</span>
             <span className="text-xs text-[var(--color-muted-foreground)]">· Built on GenLayer</span>
           </div>
