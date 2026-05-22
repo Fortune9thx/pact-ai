@@ -15,7 +15,7 @@ export function DemoBanner() {
         {" — "}
         All actions are simulated in your browser using realistic data. No real transactions.{" "}
         <a
-          href="https://github.com/fortune9thx/pact-ai"
+          href="https://github.com/Fortune9thx/pact-ai"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 underline underline-offset-2 opacity-80 hover:opacity-100"
