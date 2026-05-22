@@ -113,9 +113,10 @@ export async function getStats(): Promise<DashboardStats> {
       activeDeals:       result.active_deals       ?? 0,
       pendingReviews:    result.pending_reviews     ?? 0,
       escrowVolume:      String(result.total_deals  ?? 0),
+      totalDeals:        result.total_deals         ?? 0,
       aiResolutionRate:  result.ai_resolution_rate  ?? 0,
     };
   } catch {
-    return { activeDeals: 0, pendingReviews: 0, escrowVolume: "0", aiResolutionRate: 0 };
+    return { activeDeals: 0, pendingReviews: 0, escrowVolume: "0", totalDeals: 0, aiResolutionRate: 0 };
   }
 }

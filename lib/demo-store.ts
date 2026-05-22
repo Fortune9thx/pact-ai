@@ -234,6 +234,7 @@ export const demoStore = {
       activeDeals: active,
       pendingReviews: pending,
       escrowVolume: String(all.reduce((s, d) => s + parseFloat(d.amount || "0"), 0)),
+      totalDeals: total,
       aiResolutionRate: total > 0 ? Math.round((resolved / total) * 100) : 0,
     };
   },

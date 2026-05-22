@@ -80,7 +80,8 @@ export interface OverrideAIParams {
 export interface DashboardStats {
   activeDeals: number;
   pendingReviews: number;
-  escrowVolume: string;
+  escrowVolume: string;   // total GEN locked across all deals
+  totalDeals: number;     // raw deal count
   aiResolutionRate: number;
 }
 

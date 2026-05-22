@@ -204,10 +204,10 @@ export default function DashboardPage() {
       {/* Stats */}
       {stats ? (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <StatCard label="Active Deals"      value={String(stats.activeDeals)}    sub="In progress"          icon={TrendingUp} index={0} />
-          <StatCard label="Needs Review"      value={String(stats.pendingReviews)} sub="Awaiting your call"   icon={Brain}      index={1} />
-          <StatCard label="Total Agreements"  value={stats.escrowVolume}           sub="All time"             icon={Banknote}   index={2} />
-          <StatCard label="Resolved by AI"    value={`${stats.aiResolutionRate}%`} sub="AI-assisted outcomes" icon={Clock}      index={3} />
+          <StatCard label="Active Deals"    value={String(stats.activeDeals)}    sub="In progress"                        icon={TrendingUp} index={0} />
+          <StatCard label="Needs Review"    value={String(stats.pendingReviews)} sub="Awaiting your call"                 icon={Brain}      index={1} />
+          <StatCard label="Total Deals"     value={String(stats.totalDeals)}     sub={`${stats.escrowVolume} GEN escrowed`} icon={Banknote} index={2} />
+          <StatCard label="Resolved by AI"  value={`${stats.aiResolutionRate}%`} sub="AI-assisted outcomes"               icon={Clock}      index={3} />
         </div>
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
