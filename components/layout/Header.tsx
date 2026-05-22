@@ -1,8 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { WalletConnection } from "@/components/wallet/WalletConnection";
 import { usePathname } from "next/navigation";
-import { Bell } from "lucide-react";
+import { Bell, Home } from "lucide-react";
 
 const pageTitles: Record<string, { title: string; description: string }> = {
   "/dashboard": { title: "Dashboard", description: "Overview of your deals and escrow activity" },
@@ -36,7 +37,14 @@ export function Header() {
 
       {/* Right actions */}
       <div className="flex items-center gap-2 shrink-0">
-        <button className="flex items-center justify-center size-8 rounded-lg text-[var(--color-muted-foreground)] hover:bg-[var(--color-surface-raised)] hover:text-[var(--color-foreground)] transition-colors relative">
+        <Link
+          href="/"
+          className="flex items-center justify-center size-8 rounded-lg text-[var(--color-muted-foreground)] hover:bg-[var(--color-surface-raised)] hover:text-[var(--color-foreground)] transition-colors"
+          title="Go to homepage"
+        >
+          <Home className="size-4" />
+        </Link>
+        <button className="flex items-center justify-center size-8 rounded-lg text-[var(--color-muted-foreground)] hover:bg-[var(--color-surface-raised)] hover:text-[var(--color-foreground)] transition-colors">
           <Bell className="size-4" />
         </button>
         <WalletConnection />
