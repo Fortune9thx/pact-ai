@@ -1,5 +1,4 @@
 # v0.3.0
-# { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
 # Pact - GenLayer Intelligent Contract
 # AI-powered escrow and dispute resolution for creative work.
 # v0.3: invite flow — no seller upfront, AI as advisor not autonomous judge.

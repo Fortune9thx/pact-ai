@@ -7,6 +7,8 @@ import { useWallet } from "./useWallet";
 import { CONTRACT_ADDRESS } from "@/lib/genlayer";
 import type { Deal, DashboardStats, CreateDealParams, SubmitWorkParams } from "@/lib/types";
 
+const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+
 // ── Fetch all deals (used by dashboard store) ─────────────────────
 
 export function useDeals() {
@@ -78,13 +80,19 @@ export function useCreateDeal() {
   return useCallback(
     async ({ prompt, deadline, amount }: CreateDealParams): Promise<string> => {
       const amountGEN = Math.floor(parseFloat(amount));
-      await executeWrite({
+      const result = await executeWrite({
         functionName: "create_deal",
         args: [prompt, deadline, amountGEN],
         label: "Creating protected agreement",
       });
       await refresh();
-      // Re-fetch deal count to derive the new deal_id
+
+      // In demo mode, executeDemoWrite returns the deal_id directly for create_deal
+      if (IS_DEMO && result && result.startsWith("deal_")) {
+        return result;
+      }
+
+      // In production, re-fetch deal_count to derive the new deal_id
       const { getReadClient } = await import("@/lib/genlayer");
       const count = await getReadClient().readContract({
         address: CONTRACT_ADDRESS,

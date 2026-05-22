@@ -1,5 +1,8 @@
 import { getReadClient, CONTRACT_ADDRESS } from "./genlayer";
+import { demoStore } from "./demo-store";
 import type { Deal, DashboardStats } from "./types";
+
+const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 // ── Field normalization (contract returns snake_case) ─────────────
 
@@ -17,6 +20,7 @@ function normalizeDeal(raw: any): Deal {
 // ── Read contract state ───────────────────────────────────────────
 
 export async function getDeal(dealId: string): Promise<Deal | null> {
+  if (IS_DEMO) return demoStore.getDeal(dealId);
   try {
     const client = getReadClient();
     const result = await client.readContract({
@@ -31,6 +35,7 @@ export async function getDeal(dealId: string): Promise<Deal | null> {
 }
 
 export async function getAllDeals(): Promise<Deal[]> {
+  if (IS_DEMO) return demoStore.getAllDeals();
   try {
     const client = getReadClient();
     const result = await client.readContract({
@@ -45,6 +50,7 @@ export async function getAllDeals(): Promise<Deal[]> {
 }
 
 export async function getPendingDeals(): Promise<Deal[]> {
+  if (IS_DEMO) return demoStore.getPendingDeals();
   try {
     const client = getReadClient();
     const result = await client.readContract({
@@ -59,6 +65,7 @@ export async function getPendingDeals(): Promise<Deal[]> {
 }
 
 export async function getDealsForBuyer(address: string): Promise<Deal[]> {
+  if (IS_DEMO) return demoStore.getDealsForBuyer(address);
   try {
     const client = getReadClient();
     const result = await client.readContract({
@@ -73,6 +80,7 @@ export async function getDealsForBuyer(address: string): Promise<Deal[]> {
 }
 
 export async function getDealsForSeller(address: string): Promise<Deal[]> {
+  if (IS_DEMO) return demoStore.getDealsForSeller(address);
   try {
     const client = getReadClient();
     const result = await client.readContract({
@@ -87,6 +95,7 @@ export async function getDealsForSeller(address: string): Promise<Deal[]> {
 }
 
 export async function getStats(): Promise<DashboardStats> {
+  if (IS_DEMO) return demoStore.getStats();
   try {
     const client = getReadClient();
     const result = (await client.readContract({

@@ -2,9 +2,12 @@
 
 import { useCallback, useEffect } from "react";
 import { createGenLayerClient, CONTRACT_ADDRESS, demoAccount } from "@/lib/genlayer";
+import { demoStore, DEMO_BUYER } from "@/lib/demo-store";
 import { TransactionStatus } from "genlayer-js/types";
 import { useStore } from "@/store/useStore";
 import type { Transaction } from "@/lib/types";
+
+const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 declare global {
   interface Window {
@@ -20,6 +23,18 @@ export function useWallet() {
   const { wallet, setWallet, disconnectWallet, setTransaction, clearTransaction } = useStore();
 
   const connect = useCallback(async () => {
+    // Demo mode — auto-connect with seeded buyer persona
+    if (IS_DEMO) {
+      demoStore.seed();
+      setWallet({
+        address: DEMO_BUYER as `0x${string}`,
+        isConnected: true,
+        balance: "1000.0000",
+        chainName: "Demo Mode",
+      });
+      return;
+    }
+
     // Try MetaMask first
     if (typeof window !== "undefined" && window.ethereum) {
       try {
@@ -62,9 +77,22 @@ export function useWallet() {
     disconnectWallet();
   }, [disconnectWallet]);
 
-  // Auto-connect with demo account on mount if configured
+  // Auto-connect on mount
   useEffect(() => {
-    if (demoAccount && !wallet.isConnected) {
+    if (wallet.isConnected) return;
+
+    if (IS_DEMO) {
+      demoStore.seed();
+      setWallet({
+        address: DEMO_BUYER as `0x${string}`,
+        isConnected: true,
+        balance: "1000.0000",
+        chainName: "Demo Mode",
+      });
+      return;
+    }
+
+    if (demoAccount) {
       setWallet({
         address: demoAccount.address as `0x${string}`,
         isConnected: true,
@@ -72,11 +100,12 @@ export function useWallet() {
         chainName: "GenLayer Studionet (Demo)",
       });
     }
-  }, [setWallet, wallet.isConnected]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Listen for MetaMask account changes
   useEffect(() => {
-    if (typeof window === "undefined" || !window.ethereum) return;
+    if (IS_DEMO || typeof window === "undefined" || !window.ethereum) return;
 
     const handleAccountsChanged = (...args: unknown[]) => {
       const accounts = args[0] as string[];
@@ -91,7 +120,91 @@ export function useWallet() {
     return () => window.ethereum?.removeListener("accountsChanged", handleAccountsChanged);
   }, [disconnectWallet, setWallet]);
 
-  const executeWrite = useCallback(
+  // ── Demo write handler ─────────────────────────────────────────────
+
+  const executeDemoWrite = useCallback(
+    async ({
+      functionName,
+      args,
+      label,
+    }: {
+      functionName: string;
+      args: unknown[];
+      label: string;
+    }): Promise<string> => {
+      if (!wallet.address) throw new Error("Wallet not connected");
+
+      const tx: Transaction = { hash: "", step: "signing", label };
+      setTransaction(tx);
+
+      try {
+        setTransaction({ ...tx, step: "broadcasting" });
+
+        const addr = wallet.address;
+        switch (functionName) {
+          case "create_deal": {
+            const [prompt, deadline, amount] = args as [string, number, number];
+            const dealId = await demoStore.createDeal(addr, prompt, deadline, amount);
+            setTransaction({ hash: `0xdemo_${dealId}`, step: "confirmed", label });
+            setTimeout(clearTransaction, 3000);
+            return dealId;
+          }
+          case "claim_deal": {
+            const [dealId] = args as [string];
+            await demoStore.claimDeal(dealId, addr);
+            break;
+          }
+          case "submit_work": {
+            const [dealId, url, desc] = args as [string, string, string];
+            await demoStore.submitWork(dealId, addr, url, desc);
+            break;
+          }
+          case "approve_work": {
+            const [dealId] = args as [string];
+            await demoStore.approveWork(dealId, addr);
+            break;
+          }
+          case "request_ai_review": {
+            const [dealId] = args as [string];
+            setTransaction({ ...tx, step: "confirming", label: "AI evaluation in progress…" });
+            await demoStore.requestAIReview(dealId, addr);
+            break;
+          }
+          case "release_after_ai": {
+            const [dealId] = args as [string];
+            await demoStore.releaseAfterAI(dealId, addr);
+            break;
+          }
+          case "override_ai": {
+            const [dealId, release] = args as [string, boolean];
+            await demoStore.overrideAI(dealId, addr, release);
+            break;
+          }
+          case "cancel_deal": {
+            const [dealId] = args as [string];
+            await demoStore.cancelDeal(dealId, addr);
+            break;
+          }
+          default:
+            throw new Error(`Unknown demo function: ${functionName}`);
+        }
+
+        const fakeTxHash = `0xdemo_${Date.now().toString(16)}`;
+        setTransaction({ hash: fakeTxHash, step: "confirmed", label });
+        setTimeout(clearTransaction, 3000);
+        return fakeTxHash;
+      } catch (err) {
+        const error = err instanceof Error ? err.message : "Transaction failed";
+        setTransaction({ ...tx, step: "failed", error });
+        throw err;
+      }
+    },
+    [wallet.address, setTransaction, clearTransaction]
+  );
+
+  // ── Real (GenLayer) write handler ──────────────────────────────────
+
+  const executeRealWrite = useCallback(
     async ({
       functionName,
       args,
@@ -102,7 +215,7 @@ export function useWallet() {
       args: unknown[];
       value?: bigint;
       label: string;
-    }) => {
+    }): Promise<string> => {
       if (!wallet.address) throw new Error("Wallet not connected");
 
       const tx: Transaction = { hash: "", step: "signing", label };
@@ -130,7 +243,7 @@ export function useWallet() {
           retries: 80,
         } as Parameters<typeof client.waitForTransactionReceipt>[0]);
 
-        // Check if validators reached consensus — AI calls can hit MAJORITY_DISAGREE
+        // Check consensus result
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const txDetails = await client.getTransaction({ hash: hash as any }).catch(() => null);
         const resultName = (txDetails as { result_name?: string } | null)?.result_name;
@@ -152,6 +265,8 @@ export function useWallet() {
     },
     [wallet.address, setTransaction, clearTransaction]
   );
+
+  const executeWrite = IS_DEMO ? executeDemoWrite : executeRealWrite;
 
   return { wallet, connect, disconnect, executeWrite };
 }
