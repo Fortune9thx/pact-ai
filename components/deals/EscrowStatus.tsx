@@ -10,26 +10,26 @@ interface EscrowStatusProps {
 }
 
 const steps: Array<{ status: Deal["status"]; label: string }> = [
-  { status: "FUNDED", label: "Funded" },
-  { status: "SUBMITTED", label: "Submitted" },
-  { status: "DISPUTED", label: "AI Review" },
-  { status: "RESOLVED_PASS", label: "Resolved" },
+  { status: "FUNDED",        label: "Funded"      },
+  { status: "SUBMITTED",     label: "Submitted"   },
+  { status: "AI_REVIEWED",   label: "AI Review"   },
+  { status: "RESOLVED_PASS", label: "Resolved"    },
 ];
 
 const statusOrder: Record<string, number> = {
-  CREATED: 0,
-  FUNDED: 0,
-  SUBMITTED: 1,
-  DISPUTED: 2,
+  PENDING:       0,
+  FUNDED:        0,
+  SUBMITTED:     1,
+  AI_REVIEWED:   2,
   RESOLVED_PASS: 3,
   RESOLVED_FAIL: 3,
-  CANCELLED: 0,
+  CANCELLED:     0,
 };
 
 function EscrowIcon({ status }: { status: Deal["status"] }) {
   if (status === "RESOLVED_PASS") return <CheckCircle2 className="size-5 text-[var(--color-verdict-pass)]" />;
   if (status === "RESOLVED_FAIL") return <XCircle className="size-5 text-[var(--color-verdict-fail)]" />;
-  if (status === "DISPUTED") return <AlertTriangle className="size-5 text-[var(--color-status-disputed)]" />;
+  if (status === "AI_REVIEWED") return <AlertTriangle className="size-5 text-[var(--color-status-disputed)]" />;
   if (status === "CANCELLED") return <XCircle className="size-5 text-[var(--color-muted-foreground)]" />;
   return <Lock className="size-5 text-[var(--color-primary)]" />;
 }

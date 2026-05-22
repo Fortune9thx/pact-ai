@@ -7,9 +7,10 @@ import type { Deal, DashboardStats } from "./types";
 function normalizeDeal(raw: any): Deal {
   return {
     ...raw,
+    seller:                raw.seller ?? "",
     submissionDescription: raw.submission_description ?? raw.submissionDescription ?? "",
-    deadline: raw.deadline_days ?? raw.deadline ?? 0,
-    aiVerdict: raw.ai_verdict ?? raw.aiVerdict ?? null,
+    deadline:              raw.deadline_days ?? raw.deadline ?? 0,
+    aiVerdict:             raw.ai_verdict ?? raw.aiVerdict ?? null,
   } as Deal;
 }
 
@@ -35,6 +36,20 @@ export async function getAllDeals(): Promise<Deal[]> {
     const result = await client.readContract({
       address: CONTRACT_ADDRESS,
       functionName: "get_all_deals",
+      args: [],
+    });
+    return ((result as unknown as unknown[]) ?? []).map(normalizeDeal);
+  } catch {
+    return [];
+  }
+}
+
+export async function getPendingDeals(): Promise<Deal[]> {
+  try {
+    const client = getReadClient();
+    const result = await client.readContract({
+      address: CONTRACT_ADDRESS,
+      functionName: "get_pending_deals",
       args: [],
     });
     return ((result as unknown as unknown[]) ?? []).map(normalizeDeal);
@@ -79,17 +94,17 @@ export async function getStats(): Promise<DashboardStats> {
       functionName: "get_stats",
       args: [],
     })) as {
-      active_deals: number;
-      pending_reviews: number;
-      total_deals: number;
-      ai_resolution_rate: number;
+      active_deals:        number;
+      pending_reviews:     number;
+      total_deals:         number;
+      ai_resolution_rate:  number;
     };
 
     return {
-      activeDeals: result.active_deals ?? 0,
-      pendingReviews: result.pending_reviews ?? 0,
-      escrowVolume: String(result.total_deals ?? 0),
-      aiResolutionRate: result.ai_resolution_rate ?? 0,
+      activeDeals:       result.active_deals       ?? 0,
+      pendingReviews:    result.pending_reviews     ?? 0,
+      escrowVolume:      String(result.total_deals  ?? 0),
+      aiResolutionRate:  result.ai_resolution_rate  ?? 0,
     };
   } catch {
     return { activeDeals: 0, pendingReviews: 0, escrowVolume: "0", aiResolutionRate: 0 };

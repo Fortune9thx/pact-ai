@@ -57,26 +57,26 @@ export function formatDeadline(timestamp: number): string {
 
 export function statusLabel(status: DealStatus): string {
   const labels: Record<DealStatus, string> = {
-    CREATED: "Created",
-    FUNDED: "Funded",
-    SUBMITTED: "Submitted",
-    DISPUTED: "Disputed",
+    PENDING:       "Awaiting Seller",
+    FUNDED:        "Active",
+    SUBMITTED:     "Work Submitted",
+    AI_REVIEWED:   "AI Reviewed",
     RESOLVED_PASS: "Approved",
     RESOLVED_FAIL: "Rejected",
-    CANCELLED: "Cancelled",
+    CANCELLED:     "Cancelled",
   };
   return labels[status] ?? status;
 }
 
 export function statusColor(status: DealStatus): string {
   const colors: Record<DealStatus, string> = {
-    CREATED: "text-muted-foreground",
-    FUNDED: "text-[var(--color-status-funded)]",
-    SUBMITTED: "text-[var(--color-primary)]",
-    DISPUTED: "text-[var(--color-status-disputed)]",
+    PENDING:       "text-[var(--color-status-funded)]",
+    FUNDED:        "text-[var(--color-status-funded)]",
+    SUBMITTED:     "text-[var(--color-primary)]",
+    AI_REVIEWED:   "text-[var(--color-status-disputed)]",
     RESOLVED_PASS: "text-[var(--color-status-resolved)]",
     RESOLVED_FAIL: "text-[var(--color-destructive)]",
-    CANCELLED: "text-muted-foreground",
+    CANCELLED:     "text-muted-foreground",
   };
   return colors[status] ?? "text-foreground";
 }
