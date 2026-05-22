@@ -4,13 +4,22 @@ import { useWallet } from "@/hooks/useWallet";
 import { Button } from "@/components/ui/button";
 import { truncateAddress } from "@/lib/utils";
 import { Wallet, ChevronDown, Copy, LogOut, ExternalLink, CheckCircle2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+
+const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 export function WalletConnection() {
   const { wallet, connect, disconnect } = useWallet();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
+
+  // In demo mode, suppress the button until after hydration (auto-connect fires in useWallet's useEffect)
+  // This prevents the flash of "Connect Wallet" before the demo wallet appears.
+  if (IS_DEMO && !mounted) return null;
 
   const copyAddress = () => {
     if (!wallet.address) return;

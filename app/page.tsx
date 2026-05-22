@@ -157,7 +157,7 @@ export default function LandingPage() {
               className="hidden sm:inline text-[10px] font-medium px-2 py-0.5 rounded-full border"
               style={{ color: DEEP, borderColor: BORDER, background: "rgba(255,255,255,0.7)" }}
             >
-              Testnet
+              {process.env.NEXT_PUBLIC_DEMO_MODE === "true" ? "Demo" : "Testnet"}
             </span>
           </div>
           <div className="flex items-center gap-3">
@@ -201,7 +201,9 @@ export default function LandingPage() {
                 className="text-[12px] font-medium leading-none"
                 style={{ color: DEEP }}
               >
-                Live on GenLayer Studionet
+                {process.env.NEXT_PUBLIC_DEMO_MODE === "true"
+                  ? "Interactive Demo — Try all flows live"
+                  : "Live on GenLayer Studionet"}
               </span>
             </div>
           </motion.div>
