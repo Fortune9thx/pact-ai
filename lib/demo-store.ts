@@ -18,7 +18,7 @@ const SEED_DEALS: Deal[] = [
     buyer: DEMO_BUYER,
     seller: "",
     prompt:
-      "Design a logo for 'Lumina Studio' — a photography brand. Clean, minimal, uses soft light/lens metaphors. Deliverable: SVG + 3 colour variants.",
+      "Design a logo for 'Lumina Studio', a photography brand. Clean, minimal, uses soft light/lens metaphors. Deliverable: SVG + 3 colour variants.",
     submission: "",
     submissionDescription: "",
     amount: "120",
@@ -46,7 +46,7 @@ const SEED_DEALS: Deal[] = [
     buyer: DEMO_BUYER,
     seller: DEMO_SELLER,
     prompt:
-      "Write copy for a SaaS landing page — 'Fieldly', a field-service management app targeting SMB plumbers and electricians. Hero headline + 3 feature blurbs + CTA. Tone: direct, no jargon.",
+      "Write copy for a SaaS landing page for 'Fieldly', a field-service management app targeting SMB plumbers and electricians. Hero headline + 3 feature blurbs + CTA. Tone: direct, no jargon.",
     submission: "https://docs.google.com/document/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OhQ8R9oyE",
     submissionDescription:
       "Delivered full landing-page copy including hero headline ('Fix it. Bill it. Done.'), 3 feature blocks with subheads, and primary + secondary CTAs. Word count ~280.",

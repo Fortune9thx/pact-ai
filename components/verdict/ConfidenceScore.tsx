@@ -78,7 +78,7 @@ export function ScoreBreakdown({ styleMatch, promptAlignment, qualityMatch, conf
             className="[&_span.tabular]:text-[var(--color-primary)]"
           />
           <p className="text-[10px] text-[var(--color-muted-foreground)] mt-1.5">
-            {confidenceLabel(confidence)} confidence — how certain the AI is about its verdict
+            {confidenceLabel(confidence)} confidence. How certain the AI is about its verdict.
           </p>
         </div>
       </div>

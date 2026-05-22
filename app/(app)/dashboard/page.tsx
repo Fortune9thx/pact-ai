@@ -103,7 +103,7 @@ function AIReviewRow({ deal }: { deal: Deal }) {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <span className="text-[10px] font-medium text-[var(--color-accent-foreground)] bg-[var(--color-accent)]/15 px-2 py-0.5 rounded-full">
-          {deal.aiVerdict?.confidence ?? "—"}% confidence
+          {deal.aiVerdict?.confidence ?? "?"}% confidence
         </span>
         <ArrowRight className="size-3 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)] transition-colors" />
       </div>

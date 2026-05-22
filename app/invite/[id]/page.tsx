@@ -166,7 +166,7 @@ export default function InvitePage({ params }: { params: Promise<{ id: string }>
               Review &amp; accept a protected creative agreement
             </h1>
             <p className="text-sm text-[var(--color-muted-foreground)] mt-1.5">
-              Funds are held in escrow — you get paid when the work is approved.
+              Funds are held in escrow. You get paid when the work is approved.
             </p>
           </div>
 
@@ -224,9 +224,9 @@ export default function InvitePage({ params }: { params: Promise<{ id: string }>
             <p className="text-xs font-semibold text-[var(--color-foreground)] mb-3">How this works</p>
             <div className="flex flex-col gap-2.5">
               {[
-                { n: "1", text: "Accept the agreement — your wallet is registered as the seller" },
+                { n: "1", text: "Accept the agreement. Your wallet is registered as the seller" },
                 { n: "2", text: "Complete the creative work and submit a URL" },
-                { n: "3", text: "Buyer reviews and approves — escrow is released to you" },
+                { n: "3", text: "Buyer reviews and approves. Escrow is released to you" },
                 { n: "4", text: "If disputed, AI reviews the work against the brief objectively" },
               ].map(({ n, text }) => (
                 <div key={n} className="flex items-start gap-3">
@@ -266,7 +266,7 @@ export default function InvitePage({ params }: { params: Promise<{ id: string }>
               )}>
                 <AlertTriangle className="size-3.5 text-[var(--color-status-disputed)] shrink-0" />
                 <p className="text-xs text-[var(--color-foreground)]">
-                  You created this deal — you can&apos;t also be the seller.
+                  You created this deal. You cannot be the seller.
                 </p>
               </div>
               {IS_DEMO && (

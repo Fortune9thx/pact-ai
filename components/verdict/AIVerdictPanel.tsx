@@ -83,7 +83,7 @@ function RecommendationHeader({ result }: { result: "PASS" | "FAIL" }) {
           </span>
         </div>
         <p className="text-xs text-[var(--color-muted-foreground)] mt-0.5">
-          This is a recommendation — you make the final decision below.
+          This is a recommendation. You make the final decision below.
         </p>
       </div>
     </div>
@@ -197,7 +197,7 @@ export function AIVerdictPanel({
         <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5">
           <p className="text-xs font-semibold text-[var(--color-foreground)] mb-1">Your Decision</p>
           <p className="text-xs text-[var(--color-muted-foreground)] mb-4">
-            The AI has reviewed the work. You decide — accept the recommendation or override it.
+            The AI has reviewed the work. Accept the recommendation or override it.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             {/* Accept AI recommendation */}
@@ -217,7 +217,7 @@ export function AIVerdictPanel({
                   ? <ThumbsUp className="size-3.5" />
                   : <ThumbsDown className="size-3.5" />
               )}
-              {verdict.result === "PASS" ? "Accept — Release Payment" : "Accept — Request Refund"}
+              {verdict.result === "PASS" ? "Accept and Release Payment" : "Accept and Request Refund"}
             </Button>
             {/* Override */}
             <div className="flex gap-2 flex-1">

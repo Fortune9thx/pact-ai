@@ -12,7 +12,7 @@ export function DemoBanner() {
       <Beaker className="size-3.5 shrink-0" />
       <p className="text-xs">
         <span className="font-semibold">Interactive Demo</span>
-        {" — "}
+        {": "}
         All actions are simulated in your browser using realistic data. No real transactions.{" "}
         <a
           href="https://github.com/Fortune9thx/pact-ai"

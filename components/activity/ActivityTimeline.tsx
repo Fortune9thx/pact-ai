@@ -30,7 +30,7 @@ function buildTimeline(deal: Deal): TimelineEvent[] {
   if (deal.seller && ["FUNDED", "SUBMITTED", "AI_REVIEWED", "RESOLVED_PASS", "RESOLVED_FAIL"].includes(deal.status)) {
     events.push({
       label: "Escrow Active",
-      description: `Seller ${truncateAddress(deal.seller)} accepted — ${deal.amount} GEN locked in escrow`,
+      description: `Seller ${truncateAddress(deal.seller)} accepted. ${deal.amount} GEN locked in escrow`,
       icon: UserCheck,
       color: "text-[var(--color-status-funded)]",
       timestamp: base + 600,
@@ -54,7 +54,7 @@ function buildTimeline(deal: Deal): TimelineEvent[] {
   if (["AI_REVIEWED", "RESOLVED_PASS", "RESOLVED_FAIL"].includes(deal.status) && deal.aiVerdict) {
     events.push({
       label: "AI Review Requested",
-      description: "Buyer requested AI evaluation — GenLayer validators analyzed the submission",
+      description: "Buyer requested AI evaluation. GenLayer validators analyzed the submission",
       icon: Brain,
       color: "text-[var(--color-primary)]",
       timestamp: deal.aiVerdict.evaluated_at || base + 7200,
@@ -67,8 +67,8 @@ function buildTimeline(deal: Deal): TimelineEvent[] {
     events.push({
       label: pass ? "AI Recommends Approval" : "AI Recommends Rejection",
       description: pass
-        ? `AI review complete — ${deal.aiVerdict.confidence}% confidence in approval`
-        : `AI review complete — ${deal.aiVerdict.confidence}% confidence in rejection`,
+        ? `AI review complete. ${deal.aiVerdict.confidence}% confidence in approval`
+        : `AI review complete. ${deal.aiVerdict.confidence}% confidence in rejection`,
       icon: Brain,
       color: pass ? "text-[var(--color-verdict-pass)]" : "text-[var(--color-verdict-fail)]",
       timestamp: (deal.aiVerdict.evaluated_at || base + 7200) + 60,
@@ -79,7 +79,7 @@ function buildTimeline(deal: Deal): TimelineEvent[] {
   if (deal.status === "RESOLVED_PASS" && !deal.aiVerdict) {
     events.push({
       label: "Work Approved",
-      description: "Buyer approved the work — escrow released to seller",
+      description: "Buyer approved the work. Escrow released to seller",
       icon: ThumbsUp,
       color: "text-[var(--color-verdict-pass)]",
       timestamp: base + 7200,
@@ -92,8 +92,8 @@ function buildTimeline(deal: Deal): TimelineEvent[] {
     events.push({
       label: pass ? "Payment Released" : "Buyer Refunded",
       description: pass
-        ? "Escrow transferred to seller — agreement complete"
-        : "Escrow returned to buyer — agreement closed",
+        ? "Escrow transferred to seller. Agreement complete"
+        : "Escrow returned to buyer. Agreement closed",
       icon: pass ? CheckCircle2 : XCircle,
       color: pass ? "text-[var(--color-verdict-pass)]" : "text-[var(--color-verdict-fail)]",
       timestamp: base + 7500,

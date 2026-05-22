@@ -3,7 +3,7 @@ import "./globals.css";
 import { TransactionStatus } from "@/components/wallet/TransactionStatus";
 
 export const metadata: Metadata = {
-  title: "Pact — AI-Powered Creative Escrow",
+  title: "Pact: AI-Powered Creative Escrow",
   description:
     "Smart contracts that understand nuance. AI-powered escrow resolution for creative work and quality-based agreements on GenLayer.",
   openGraph: {

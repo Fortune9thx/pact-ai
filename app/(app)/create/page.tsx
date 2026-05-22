@@ -18,8 +18,8 @@ import { cn } from "@/lib/utils";
 
 const PROMPT_EXAMPLES = [
   "Design a dark luxury streetwear logo with minimalist sans-serif typography and no gradients.",
-  "Create a minimalist brand identity for a premium coffee subscription — wordmark + icon.",
-  "Write a short-form landing page for a B2B SaaS analytics tool — professional, concise, conversion-focused.",
+  "Create a minimalist brand identity for a premium coffee subscription: wordmark + icon.",
+  "Write a short-form landing page for a B2B SaaS analytics tool: professional, concise, conversion-focused.",
   "Illustrate a digital art piece with cyberpunk aesthetic, neon-accented, dark palette.",
 ];
 
@@ -247,7 +247,7 @@ export default function CreateDealPage() {
                     <div>
                       <p className="text-xs font-medium text-[var(--color-foreground)]">How it works</p>
                       <p className="text-xs text-[var(--color-muted-foreground)] mt-0.5 leading-relaxed">
-                        GEN tokens are held in escrow. You review the work when it&apos;s delivered — approve it
+                        GEN tokens are held in escrow. You review the work when it&apos;s delivered. Approve it
                         to release payment, or request an AI review if you need a second opinion.
                       </p>
                     </div>

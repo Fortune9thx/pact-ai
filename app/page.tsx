@@ -87,7 +87,7 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
 
 /* ── Data ───────────────────────────────────────────────────────── */
 const steps = [
-  { n: "01", title: "Write your brief", description: "Describe the work in plain language. Set escrow in GEN. Get a shareable invite link — no seller wallet needed.", icon: PenTool },
+  { n: "01", title: "Write your brief", description: "Describe the work in plain language. Set escrow in GEN. Get a shareable invite link, no seller wallet needed.", icon: PenTool },
   { n: "02", title: "Invite your creative", description: "Send the link via Discord, WhatsApp, or email. They preview the agreement and accept with one click.", icon: ArrowRight },
   { n: "03", title: "Review the delivery", description: "Approve work directly to release payment. If you need a second opinion, request an AI review.", icon: CheckCircle2 },
   { n: "04", title: "AI advises, you decide", description: "GenLayer AI evaluates style, alignment, and quality against your brief. You make the final call.", icon: Brain },
@@ -202,7 +202,7 @@ export default function LandingPage() {
                 style={{ color: DEEP }}
               >
                 {process.env.NEXT_PUBLIC_DEMO_MODE === "true"
-                  ? "Interactive Demo — Try all flows live"
+                  ? "Interactive Demo: Try all flows live"
                   : "Live on GenLayer Studionet"}
               </span>
             </div>
@@ -217,13 +217,12 @@ export default function LandingPage() {
               color: DEEP,
             }}
           >
-            Protect your creative work.<br />
-            Resolve disputes with{" "}
+            Smart contracts that{" "}
             <span
               className="bg-clip-text text-transparent"
               style={{ backgroundImage: `linear-gradient(90deg, ${DEEP}, ${ELECTRIC})` }}
             >
-              AI.
+              understand nuance.
             </span>
           </motion.h1>
 
@@ -233,7 +232,7 @@ export default function LandingPage() {
             className="text-lg text-[var(--color-muted-foreground)] max-w-2xl mx-auto mb-9 leading-relaxed text-balance"
           >
             Escrow protection for creative work you&apos;re already doing. Invite your designer, writer, or developer
-            via link — no crypto knowledge required. AI helps resolve disputes if they arise. You decide.
+            via link, no crypto knowledge required. AI helps resolve disputes if they arise. You decide.
           </motion.p>
 
           {/* CTAs */}
@@ -304,7 +303,7 @@ export default function LandingPage() {
               How it works
             </h2>
             <p className="text-[var(--color-muted-foreground)] max-w-xl mx-auto">
-              Built for people who already work together — and want protection without friction.
+              Built for people who already work together and want protection without friction.
             </p>
           </motion.div>
 
@@ -360,7 +359,7 @@ export default function LandingPage() {
             </h2>
             <p className="text-[var(--color-muted-foreground)] max-w-xl mx-auto">
               When quality is disputed, the AI evaluates against your brief and gives a recommendation.
-              You retain full control — approve, reject, or override.
+              You retain full control: approve, reject, or override.
             </p>
           </motion.div>
 
@@ -410,7 +409,7 @@ export default function LandingPage() {
                       </span>
                     </div>
                     <p className="text-xs text-[var(--color-muted-foreground)] mt-0.5">
-                      AI recommends approval — buyer confirms to release escrow
+                      AI recommends approval. Buyer confirms to release escrow
                     </p>
                   </div>
                 </div>
@@ -449,7 +448,7 @@ export default function LandingPage() {
               For the work you&apos;re already doing
             </h2>
             <p className="text-[var(--color-muted-foreground)] max-w-xl mx-auto">
-              Pact works with existing relationships — not a new marketplace to join.
+              Pact works with existing relationships, not a new marketplace to join.
             </p>
           </motion.div>
 
@@ -500,7 +499,7 @@ export default function LandingPage() {
                   Protect your next<br />creative agreement
                 </h2>
                 <p className="text-[var(--color-muted-foreground)] mb-8 leading-relaxed max-w-md mx-auto">
-                  Write the brief, lock escrow, send an invite link. Your creative accepts in seconds — no crypto setup required on their end.
+                  Write the brief, lock escrow, send an invite link. Your creative accepts in seconds, no crypto setup required on their end.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Link href="/create">

@@ -166,7 +166,7 @@ export function useRequestAIReview() {
       return executeWrite({
         functionName: "request_ai_review",
         args: [dealId],
-        label: "Requesting AI review — this may take 1–2 minutes",
+        label: "Requesting AI review, this may take 1-2 minutes",
       });
     },
     [executeWrite]
