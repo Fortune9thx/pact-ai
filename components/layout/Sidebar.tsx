@@ -6,11 +6,13 @@ import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   PlusCircle,
-  FileText,
   Zap,
   GitBranch,
   BookOpen,
+  Beaker,
 } from "lucide-react";
+
+const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 const nav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -19,7 +21,12 @@ const nav = [
 
 const footerLinks = [
   { href: "https://docs.genlayer.com", label: "GenLayer Docs", icon: BookOpen, external: true },
-  { href: "https://github.com/genlayerlabs", label: "GitHub", icon: GitBranch, external: true },
+  {
+    href: IS_DEMO ? "https://github.com/Fortune9thx/pact-ai" : "https://github.com/genlayerlabs",
+    label: "GitHub",
+    icon: GitBranch,
+    external: true,
+  },
 ];
 
 export function Sidebar() {
@@ -36,7 +43,9 @@ export function Sidebar() {
           <p className="text-sm font-semibold tracking-tight text-[var(--color-foreground)]">
             Pact
           </p>
-          <p className="text-[10px] text-[var(--color-muted-foreground)]">GenLayer Testnet</p>
+          <p className="text-[10px] text-[var(--color-muted-foreground)]">
+            {IS_DEMO ? "Interactive Demo" : "GenLayer Testnet"}
+          </p>
         </div>
       </div>
 
@@ -68,16 +77,30 @@ export function Sidebar() {
 
         {/* Status chip */}
         <div className="mt-6 mx-2 p-3 rounded-lg bg-[var(--color-surface-raised)] border border-[var(--color-border)]">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="relative flex size-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-verdict-pass)] opacity-50" />
-              <span className="relative inline-flex rounded-full size-1.5 bg-[var(--color-verdict-pass)]" />
-            </span>
-            <p className="text-xs font-medium text-[var(--color-foreground)]">Testnet Live</p>
-          </div>
-          <p className="text-[10px] text-[var(--color-muted-foreground)] leading-relaxed">
-            AI validators running on Studionet. LLM evaluation active.
-          </p>
+          {IS_DEMO ? (
+            <>
+              <div className="flex items-center gap-2 mb-1">
+                <Beaker className="size-3 text-amber-500 shrink-0" />
+                <p className="text-xs font-medium text-[var(--color-foreground)]">Demo Mode</p>
+              </div>
+              <p className="text-[10px] text-[var(--color-muted-foreground)] leading-relaxed">
+                Actions simulated in-browser. GenLayer contract source in GitHub.
+              </p>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="relative flex size-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-verdict-pass)] opacity-50" />
+                  <span className="relative inline-flex rounded-full size-1.5 bg-[var(--color-verdict-pass)]" />
+                </span>
+                <p className="text-xs font-medium text-[var(--color-foreground)]">Testnet Live</p>
+              </div>
+              <p className="text-[10px] text-[var(--color-muted-foreground)] leading-relaxed">
+                AI validators running on Studionet. LLM evaluation active.
+              </p>
+            </>
+          )}
         </div>
       </nav>
 
