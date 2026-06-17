@@ -39,7 +39,7 @@ export default function CreateClaim() {
       {/* ── NAV ── */}
       <header className="sticky top-0 z-50 border-b backdrop-blur-md"
         style={{ background: "rgba(10,9,9,0.88)", borderColor: "rgba(255,255,255,0.07)" }}>
-        <div className="max-w-screen-xl mx-auto px-6 h-14 flex items-center justify-between">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/arena"
             className="text-xs font-mono transition-colors"
             style={{ color: "rgba(237,235,230,0.35)" }}>
@@ -57,7 +57,7 @@ export default function CreateClaim() {
         </div>
       </header>
 
-      <div className="max-w-screen-lg mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-[1fr_280px] gap-8 items-start">
+      <div className="max-w-screen-lg mx-auto px-4 sm:px-6 py-8 sm:py-10 grid grid-cols-1 md:grid-cols-[1fr_280px] gap-6 sm:gap-8 items-start">
 
         {/* ── FORM ── */}
         <div>

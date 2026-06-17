@@ -81,12 +81,12 @@ export default async function Home() {
 
       {/* ── NAV ── */}
       <header className="fixed top-0 z-50 w-full border-b border-white/[0.06] bg-[#0a0808]/85 backdrop-blur-md">
-        <div className="max-w-screen-xl mx-auto px-6 h-14 flex items-center gap-8">
-          <span className="shrink-0 text-white text-sm tracking-[0.35em] font-bold font-mono"
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 h-14 flex items-center gap-4 sm:gap-8">
+          <Link href="/" className="shrink-0 text-white text-sm tracking-[0.35em] font-bold font-mono"
             style={{ textShadow: "0 0 20px rgba(139,92,246,0.8), 0 0 40px rgba(139,92,246,0.4)" }}>
             ERISTIC
-          </span>
-          <nav className="flex items-center gap-1 flex-1">
+          </Link>
+          <nav className="hidden md:flex items-center gap-1 flex-1">
             {[
               { href: "/arena", label: "Arena" },
               { href: "/create", label: "File a Claim" },
@@ -98,15 +98,20 @@ export default async function Home() {
               </Link>
             ))}
           </nav>
-          <div className="flex items-center gap-3 shrink-0">
-            <Link href="/create" className="btn-amber py-1.5 px-4 text-sm">+ New Claim</Link>
+          <div className="flex-1 md:hidden" />
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <Link href="/create"
+              className="hidden sm:inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-bold tracking-[0.12em] uppercase text-white transition-all"
+              style={{ background: "linear-gradient(135deg, #7c3aed, #8b5cf6)" }}>
+              + New
+            </Link>
             <ConnectButton />
           </div>
         </div>
       </header>
 
       {/* ── HERO ── */}
-      <section className="relative flex flex-col items-center justify-center min-h-screen pt-14 px-6 overflow-hidden">
+      <section className="relative flex flex-col items-center justify-center min-h-screen pt-14 px-4 sm:px-6 overflow-hidden">
 
         {/* Deep purple bloom — more intense */}
         <div className="pointer-events-none absolute inset-0 z-0"
@@ -126,35 +131,35 @@ export default async function Home() {
         {/* ── FLOATING AVATARS ── */}
 
         {/* av3 photo — top left */}
-        <div className="absolute z-10 avatar-float-1" style={{ top: "16%", left: "5%" }}>
+        <div className="absolute z-10 avatar-float-1 hidden md:block" style={{ top: "16%", left: "5%" }}>
           <Avatar size={68} blur={1.5} opacity={0.82} ring="rgba(139,92,246,0.4)">
             <Image src="/av3.jpg" alt="" width={68} height={68} className="object-cover w-full h-full" unoptimized />
           </Avatar>
         </div>
 
         {/* av4 photo — left mid */}
-        <div className="absolute z-10 avatar-float-2" style={{ top: "43%", left: "2.5%" }}>
+        <div className="absolute z-10 avatar-float-2 hidden md:block" style={{ top: "43%", left: "2.5%" }}>
           <Avatar size={76} blur={2} opacity={0.7} ring="rgba(255,255,255,0.15)">
             <Image src="/av4.jpg" alt="" width={76} height={76} className="object-cover w-full h-full" unoptimized />
           </Avatar>
         </div>
 
         {/* av5 photo — bottom left */}
-        <div className="absolute z-10 avatar-float-3" style={{ bottom: "24%", left: "7%" }}>
+        <div className="absolute z-10 avatar-float-3 hidden md:block" style={{ bottom: "24%", left: "7%" }}>
           <Avatar size={58} blur={2.5} opacity={0.6} ring="rgba(139,92,246,0.3)">
             <Image src="/av5.jpg" alt="" width={58} height={58} className="object-cover w-full h-full" unoptimized />
           </Avatar>
         </div>
 
         {/* av1 photo — top right */}
-        <div className="absolute z-10 avatar-float-4" style={{ top: "13%", right: "6%" }}>
+        <div className="absolute z-10 avatar-float-4 hidden md:block" style={{ top: "13%", right: "6%" }}>
           <Avatar size={80} blur={1} opacity={0.88} ring="rgba(139,92,246,0.5)">
             <Image src="/av1.jpg" alt="" width={80} height={80} className="object-cover w-full h-full" unoptimized />
           </Avatar>
         </div>
 
         {/* FC Barcelona — right mid-high */}
-        <div className="absolute z-10 avatar-float-5" style={{ top: "36%", right: "3%" }}>
+        <div className="absolute z-10 avatar-float-5 hidden md:block" style={{ top: "36%", right: "3%" }}>
           <Avatar size={66} blur={2} opacity={0.72} ring="rgba(165,0,68,0.5)">
             <div className="w-full h-full rounded-full overflow-hidden"
               style={{ background: "linear-gradient(145deg, #a50044 0%, #004d98 55%, #a50044 100%)" }}>
@@ -171,7 +176,7 @@ export default async function Home() {
         </div>
 
         {/* Bitcoin — bottom right */}
-        <div className="absolute z-10 avatar-float-6" style={{ bottom: "22%", right: "8%" }}>
+        <div className="absolute z-10 avatar-float-6 hidden md:block" style={{ bottom: "22%", right: "8%" }}>
           <Avatar size={72} blur={1.5} opacity={0.78} ring="rgba(247,147,26,0.5)">
             <div className="w-full h-full flex items-center justify-center rounded-full"
               style={{ background: "linear-gradient(135deg, #fbbf24 0%, #f7931a 50%, #e8820c 100%)" }}>
@@ -183,7 +188,7 @@ export default async function Home() {
         </div>
 
         {/* av2 photo — bottom center-left */}
-        <div className="absolute z-10 avatar-float-7" style={{ bottom: "28%", left: "21%" }}>
+        <div className="absolute z-10 avatar-float-7 hidden md:block" style={{ bottom: "28%", left: "21%" }}>
           <Avatar size={50} blur={3} opacity={0.5} ring="rgba(255,255,255,0.1)">
             <Image src="/av2.jpg" alt="" width={50} height={50} className="object-cover w-full h-full" unoptimized />
           </Avatar>
@@ -290,8 +295,8 @@ export default async function Home() {
         {/* ── HEADLINE BELOW ── */}
         <div className="relative z-20 text-center mt-10 max-w-2xl">
           <h1 className="font-bold leading-[0.93] tracking-tight text-white"
-            style={{ fontSize: "clamp(44px, 6.5vw, 96px)" }}>
-            Debate. Stake.
+            style={{ fontSize: "clamp(34px, 5vw, 72px)" }}>
+            Debate. Stake
             <br />
             Get your{" "}
             <span style={{
@@ -307,16 +312,16 @@ export default async function Home() {
             Put your claims on-chain. AI validators reach consensus —
             no judges, no politics, no middlemen.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8 w-full">
             <Link href="/create"
-              className="inline-flex items-center justify-center px-8 py-3 rounded-full text-sm font-bold tracking-[0.12em] uppercase text-white transition-all duration-200"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-full text-sm font-bold tracking-[0.12em] uppercase text-white transition-all duration-200"
               style={{
                 background: "linear-gradient(135deg, #7c3aed, #8b5cf6)",
                 boxShadow: "0 4px 28px rgba(139,92,246,0.45)",
               }}>
               Enter the Arena
             </Link>
-            <Link href="/arena" className="btn-ghost px-8 py-3 text-sm">
+            <Link href="/arena" className="btn-ghost w-full sm:w-auto px-8 py-3.5 text-sm">
               View All Claims
             </Link>
           </div>
@@ -324,7 +329,7 @@ export default async function Home() {
       </section>
 
       {/* ── STATS GRID ── */}
-      <section className="max-w-screen-xl mx-auto px-6 py-16">
+      <section className="max-w-screen-xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           <StatCard value={String(stats.total)}    unit="CLAIMS" label="Total filed" />
           <StatCard value={String(stats.active)}   unit="OPEN"   label="Active disputes"   accent />
@@ -336,7 +341,7 @@ export default async function Home() {
       </section>
 
       {/* ── LIVE CLAIMS ── */}
-      <section className="max-w-screen-xl mx-auto px-6 pb-32">
+      <section className="max-w-screen-xl mx-auto px-4 sm:px-6 pb-24 sm:pb-32">
         <div className="flex items-center justify-between mb-6">
           <div>
             <p className="text-[10px] tracking-[0.4em] uppercase font-mono mb-1" style={{ color: "rgba(217,212,199,0.25)" }}>

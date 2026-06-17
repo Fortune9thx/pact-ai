@@ -56,12 +56,12 @@ export function ConnectButton() {
             background: "rgba(255,255,255,0.04)",
             border: "1px solid rgba(255,255,255,0.1)",
           }}>
-          <span className="h-1.5 w-1.5 rounded-full" style={{ background: "#22c55e" }} />
+          <span className="h-1.5 w-1.5 rounded-full shrink-0" style={{ background: "#22c55e" }} />
           <span style={{ color: "rgba(237,235,230,0.6)" }}>
             {addr.slice(0, 6)}…{addr.slice(-4)}
           </span>
-          <span style={{ color: empty ? "#f87171" : "rgba(237,235,230,0.4)" }}
-            className="tabular-nums">
+          <span className="hidden sm:inline tabular-nums"
+            style={{ color: empty ? "#f87171" : "rgba(237,235,230,0.4)" }}>
             {genStr} GEN
           </span>
         </div>
@@ -84,13 +84,14 @@ export function ConnectButton() {
   return (
     <div className="flex items-center gap-2">
       <button onClick={connect} disabled={busy}
-        className="px-4 py-1.5 rounded-full text-sm font-medium transition-all disabled:opacity-50"
+        className="px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all disabled:opacity-50 whitespace-nowrap"
         style={{
           background: "rgba(139,92,246,0.15)",
           border: "1px solid rgba(139,92,246,0.3)",
           color: "#a78bfa",
         }}>
-        {busy ? "Connecting…" : "Connect Wallet"}
+        <span className="hidden sm:inline">{busy ? "Connecting…" : "Connect Wallet"}</span>
+        <span className="sm:hidden">{busy ? "…" : "Connect"}</span>
       </button>
       {err && <span className="text-[10px] font-mono" style={{ color: "#f87171" }}>{err}</span>}
     </div>

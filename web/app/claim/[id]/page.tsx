@@ -44,7 +44,7 @@ export default async function ClaimDetail({
       {/* ── NAV ── */}
       <header className="sticky top-0 z-50 border-b backdrop-blur-md"
         style={{ background: "rgba(10,9,9,0.88)", borderColor: "rgba(255,255,255,0.07)" }}>
-        <div className="max-w-screen-xl mx-auto px-6 h-14 flex items-center justify-between">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/arena"
             className="flex items-center gap-2 text-xs font-mono transition-colors hover:text-[#edebe6]"
             style={{ color: "rgba(237,235,230,0.35)" }}>
@@ -65,7 +65,7 @@ export default async function ClaimDetail({
         </div>
       </header>
 
-      <div className="max-w-screen-xl mx-auto px-6 py-8 space-y-5">
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-4 sm:space-y-5">
 
         {/* ── CLAIM HERO ── */}
         <div className="rounded-xl overflow-hidden"
@@ -73,9 +73,9 @@ export default async function ClaimDetail({
           {/* state colour strip */}
           <div className="h-[3px]" style={{ background: cfg.color, opacity: 0.6 }} />
 
-          <div className="px-6 py-6">
+          <div className="px-4 sm:px-6 py-5 sm:py-6">
             {/* meta row */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-wrap items-start justify-between gap-2 mb-4">
               <div className="flex items-center gap-3">
                 <span className="text-[10px] font-mono tracking-widest"
                   style={{ color: "rgba(237,235,230,0.25)" }}>#{claim.id}</span>
@@ -96,7 +96,7 @@ export default async function ClaimDetail({
                   {cfg.label}
                 </span>
               </div>
-              <div className="flex items-center gap-5 text-xs font-mono"
+              <div className="flex flex-wrap items-center gap-3 text-xs font-mono"
                 style={{ color: "rgba(237,235,230,0.3)" }}>
                 <span>
                   by{" "}
@@ -113,7 +113,7 @@ export default async function ClaimDetail({
             </div>
 
             {/* Statement */}
-            <h1 className="text-xl font-semibold leading-snug mb-5"
+            <h1 className="text-lg sm:text-xl font-semibold leading-snug mb-5"
               style={{ color: "#edebe6" }}>
               {claim.statement}
             </h1>
@@ -121,10 +121,11 @@ export default async function ClaimDetail({
             {/* FOR / AGAINST bar */}
             {total > 0 && (
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-[11px] font-mono"
+                <div className="flex items-center justify-between text-[10px] font-mono"
                   style={{ color: "rgba(237,235,230,0.3)" }}>
-                  <span style={{ color: "#a78bfa" }}>FOR — {fmtGen(pool!.total_for)} GEN ({forPct}%)</span>
-                  <span style={{ color: "#f87171" }}>AGAINST — {fmtGen(pool!.total_against)} GEN ({100 - forPct}%)</span>
+                  <span style={{ color: "#a78bfa" }}>FOR {forPct}%</span>
+                  <span className="hidden sm:inline" style={{ color: "rgba(237,235,230,0.2)" }}>{fmtGen(pool!.total_for)} vs {fmtGen(pool!.total_against)} GEN</span>
+                  <span style={{ color: "#f87171" }}>AGAINST {100 - forPct}%</span>
                 </div>
                 <div className="h-2.5 w-full rounded-full overflow-hidden flex"
                   style={{ background: "rgba(255,255,255,0.06)" }}>

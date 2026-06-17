@@ -62,7 +62,7 @@ export default async function Arena({
 
       {/* ── PAGE HEADER ── */}
       <div style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-        <div className="max-w-screen-xl mx-auto px-6 pt-10 pb-0">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 pt-8 sm:pt-10 pb-0">
 
           {/* Network badge */}
           <div className="flex items-center gap-2 mb-5">
@@ -81,8 +81,8 @@ export default async function Arena({
             The Arena
           </h1>
 
-          {/* Stats — all same muted white, ONE number in purple (in-review = processing) */}
-          <div className="flex items-end gap-10 mb-8">
+          {/* Stats — 2-col grid on mobile, single row on desktop */}
+          <div className="grid grid-cols-2 sm:flex sm:items-end gap-4 sm:gap-10 mb-8">
             {[
               { value: stats.total,    label: "Total Claims", accent: false },
               { value: stats.active,   label: "Active",       accent: false },
@@ -128,7 +128,7 @@ export default async function Arena({
             })}
             <div className="flex-1" />
             <Link href="/create"
-              className="mb-1 px-5 py-2 rounded-full text-sm font-semibold tracking-wide text-white transition-all"
+              className="hidden sm:block mb-1 px-5 py-2 rounded-full text-sm font-semibold tracking-wide text-white transition-all"
               style={{
                 background: "#7c3aed",
                 boxShadow: "0 0 24px rgba(124,58,237,0.4)",
@@ -140,7 +140,7 @@ export default async function Arena({
       </div>
 
       {/* ── CLAIMS LIST ── */}
-      <main className="max-w-screen-xl mx-auto px-6 py-6">
+      <main className="max-w-screen-xl mx-auto px-4 sm:px-6 py-6">
         {!ADDRS.registry && (
           <div className="rounded-lg p-5 mb-6 text-sm"
             style={{ background: "rgba(245,158,11,0.07)", border: "1px solid rgba(245,158,11,0.18)", color: "#d97706" }}>
