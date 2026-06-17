@@ -27,6 +27,7 @@ export interface Claim {
   evidence_weight: number;  // basis points
   reasoning: string;
   tips: number;             // cumulative GEN tipped to this claim (wei)
+  created_at: number;       // unix timestamp
 }
 
 export interface Pool {

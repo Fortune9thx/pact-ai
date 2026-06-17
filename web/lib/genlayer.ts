@@ -16,9 +16,11 @@ const chain =
 
 export const publicClient = createClient({ chain });
 
+type Addr = `0x${string}`;
+
 export async function readClaim(id: number): Promise<Claim> {
   const raw = (await publicClient.readContract({
-    address: ADDRS.registry,
+    address: ADDRS.registry as Addr,
     functionName: "get_claim",
     args: [id],
   })) as string;
@@ -27,7 +29,7 @@ export async function readClaim(id: number): Promise<Claim> {
 
 export async function listClaimIds(): Promise<number[]> {
   const raw = (await publicClient.readContract({
-    address: ADDRS.registry,
+    address: ADDRS.registry as Addr,
     functionName: "list_ids",
     args: [],
   })) as string;
@@ -36,7 +38,7 @@ export async function listClaimIds(): Promise<number[]> {
 
 export async function readPool(id: number): Promise<Pool> {
   const raw = (await publicClient.readContract({
-    address: ADDRS.stakeManager,
+    address: ADDRS.stakeManager as Addr,
     functionName: "get_pool",
     args: [id],
   })) as string;
@@ -53,7 +55,7 @@ export interface StakerPosition {
 
 export async function readStakerPositions(addr: string): Promise<StakerPosition[]> {
   const raw = (await publicClient.readContract({
-    address: ADDRS.stakeManager,
+    address: ADDRS.stakeManager as Addr,
     functionName: "get_positions_by_staker",
     args: [addr],
   })) as string;
