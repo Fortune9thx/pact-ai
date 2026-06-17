@@ -50,6 +50,13 @@ body::before {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-14px); }
 }
+.av-bob-1 { animation: avatarBob 5.2s ease-in-out infinite; }
+.av-bob-2 { animation: avatarBob 6.1s ease-in-out infinite 0.8s; }
+.av-bob-3 { animation: avatarBob 4.8s ease-in-out infinite 1.6s; }
+.av-bob-4 { animation: avatarBob 5.7s ease-in-out infinite 0.4s; }
+.av-bob-5 { animation: avatarBob 6.5s ease-in-out infinite 1.2s; }
+.av-bob-6 { animation: avatarBob 5.0s ease-in-out infinite 2.0s; }
+.av-bob-7 { animation: avatarBob 4.6s ease-in-out infinite 0.2s; }
 
 
 /* Tags */
