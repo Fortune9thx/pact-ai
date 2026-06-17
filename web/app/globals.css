@@ -58,6 +58,25 @@ body::before {
 .avatar-float-6 { animation: float 5.0s ease-in-out infinite 2.0s; }
 .avatar-float-7 { animation: float 4.6s ease-in-out infinite 0.2s; }
 
+/* Avatar scatter positions — different for mobile vs desktop */
+.av-pos-1 { top: 16%; left: 5%; }
+.av-pos-2 { top: 43%; left: 2.5%; }
+.av-pos-3 { bottom: 24%; left: 7%; }
+.av-pos-4 { top: 13%; right: 6%; }
+.av-pos-5 { top: 36%; right: 3%; }
+.av-pos-6 { bottom: 22%; right: 8%; }
+.av-pos-7 { bottom: 28%; left: 21%; }
+
+@media (max-width: 767px) {
+  .av-pos-1 { top: 9%;    left: 4%;    }
+  .av-pos-2 { top: 9%;    right: 4%;   left: auto; }
+  .av-pos-3 { top: 19%;   left: 6%;    bottom: auto; }
+  .av-pos-4 { bottom: 8%; right: 5%;   top: auto; }
+  .av-pos-5 { bottom: 8%; left: 5%;    top: auto; right: auto; }
+  .av-pos-6 { top: 20%;   right: 4%;   bottom: auto; left: auto; }
+  .av-pos-7 { bottom: 18%; left: 42%; }
+}
+
 /* Tags */
 .tag { @apply inline-block px-2 py-[2px] text-[10px] uppercase tracking-widest border rounded-sm; }
 .tag-open      { @apply border-amber/50 text-amber bg-amber/5; }
