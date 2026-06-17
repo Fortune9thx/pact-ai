@@ -370,9 +370,45 @@ export default async function Home() {
         )}
       </section>
 
+      {/* ── HOW IT WORKS ── */}
+      <section className="max-w-screen-xl mx-auto px-4 sm:px-6 pb-20">
+        <p className="text-[10px] tracking-[0.4em] uppercase font-mono mb-3" style={{ color: "rgba(217,212,199,0.2)" }}>
+          How it works
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+          {[
+            { n: "01", title: "File a Claim", body: "Write a falsifiable statement with supporting argument and evidence links." },
+            { n: "02", title: "Stake your side", body: "Back FOR or AGAINST with GEN tokens. Other users can challenge, tip, or stake the other side." },
+            { n: "03", title: "AI adjudication", body: "GenLayer's 5 validator nodes independently reason toward a verdict, then reach consensus." },
+            { n: "04", title: "Verdict + payout", body: "The winning side splits the losing pool. Verdict and reasoning are written immutably on-chain." },
+          ].map(({ n, title, body }) => (
+            <div key={n} className="rounded-xl p-5"
+              style={{ background: "#111009", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <span className="text-[11px] font-mono font-bold block mb-3" style={{ color: "rgba(139,92,246,0.6)" }}>{n}</span>
+              <p className="text-sm font-semibold mb-1.5" style={{ color: "#edebe6" }}>{title}</p>
+              <p className="text-xs leading-relaxed" style={{ color: "rgba(217,212,199,0.4)" }}>{body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── RISK DISCLAIMER ── */}
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 pb-10">
+        <div className="rounded-xl px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-3"
+          style={{ background: "rgba(245,158,11,0.05)", border: "1px solid rgba(245,158,11,0.15)" }}>
+          <span className="text-base shrink-0">⚠️</span>
+          <p className="text-xs leading-relaxed" style={{ color: "rgba(237,235,230,0.45)" }}>
+            <strong style={{ color: "rgba(237,235,230,0.7)" }}>Risk notice:</strong>{" "}
+            Staking involves risk of total loss. Verdicts are final and issued by AI consensus — not a court of law.
+            This app runs on <strong style={{ color: "rgba(237,235,230,0.7)" }}>GenLayer Bradbury Testnet</strong>. All GEN tokens are test tokens with no real-world monetary value.
+            Do not stake funds you cannot afford to lose on mainnet deployments.
+          </p>
+        </div>
+      </div>
+
       {/* ── FOOTER ── */}
       <footer style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }} className="py-10">
-        <div className="max-w-screen-xl mx-auto px-6 flex flex-col sm:flex-row items-start justify-between gap-8">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-start justify-between gap-8">
           <div>
             <span className="text-sm tracking-[0.35em] font-bold font-mono block mb-2 text-white"
               style={{ textShadow: "0 0 16px rgba(139,92,246,0.6)" }}>ERISTIC</span>

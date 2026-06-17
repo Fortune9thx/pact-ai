@@ -4,9 +4,9 @@
 People stake on claims. Others challenge. Validators reason. Consensus settles.
 The contract stores not only the result, but the reasoning.
 
-Live demo target: **Studionet** (hosted simulator, instant finality).
-Production target: **Bradbury** testnet (real validator network, ~30 min per
-tx due to optimistic-democracy appeal windows).
+**Live:** [eristic.vercel.app](https://eristic.vercel.app) — deployed on **GenLayer Bradbury Testnet**.
+
+> ⚠️ Testnet only. All GEN tokens have no real-world monetary value. Get free test GEN at [testnet-faucet.genlayer.foundation](https://testnet-faucet.genlayer.foundation).
 
 ```
 ERISTIC                              ● 5 ACTIVE CLAIMS_
@@ -177,4 +177,6 @@ and key-handling rules.
       auto-refresh + balance pill
 - [x] Lifecycle smoke-tested: one claim resolved with substantive
       validator reasoning citing specific evidence items
-- [ ] Bradbury production deployment
+- [x] Bradbury testnet deployment ([`deployments.bradbury.json`](deployments.bradbury.json))
+- [x] Mobile-responsive UI
+- [x] Live at [eristic.vercel.app](https://eristic.vercel.app)
