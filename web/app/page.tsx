@@ -126,35 +126,35 @@ export default async function Home() {
         {/* ── FLOATING AVATARS ── */}
 
         {/* av3 photo — top left */}
-        <div className="absolute z-10" style={{ top: "16%", left: "5%" }}>
+        <div className="absolute z-10 avatar-float-1" style={{ top: "16%", left: "5%" }}>
           <Avatar size={68} blur={1.5} opacity={0.82} ring="rgba(139,92,246,0.4)">
             <Image src="/av3.jpg" alt="" width={68} height={68} className="object-cover w-full h-full" unoptimized />
           </Avatar>
         </div>
 
         {/* av4 photo — left mid */}
-        <div className="absolute z-10" style={{ top: "43%", left: "2.5%" }}>
+        <div className="absolute z-10 avatar-float-2" style={{ top: "43%", left: "2.5%" }}>
           <Avatar size={76} blur={2} opacity={0.7} ring="rgba(255,255,255,0.15)">
             <Image src="/av4.jpg" alt="" width={76} height={76} className="object-cover w-full h-full" unoptimized />
           </Avatar>
         </div>
 
         {/* av5 photo — bottom left */}
-        <div className="absolute z-10" style={{ bottom: "24%", left: "7%" }}>
+        <div className="absolute z-10 avatar-float-3" style={{ bottom: "24%", left: "7%" }}>
           <Avatar size={58} blur={2.5} opacity={0.6} ring="rgba(139,92,246,0.3)">
             <Image src="/av5.jpg" alt="" width={58} height={58} className="object-cover w-full h-full" unoptimized />
           </Avatar>
         </div>
 
         {/* av1 photo — top right */}
-        <div className="absolute z-10" style={{ top: "13%", right: "6%" }}>
+        <div className="absolute z-10 avatar-float-4" style={{ top: "13%", right: "6%" }}>
           <Avatar size={80} blur={1} opacity={0.88} ring="rgba(139,92,246,0.5)">
             <Image src="/av1.jpg" alt="" width={80} height={80} className="object-cover w-full h-full" unoptimized />
           </Avatar>
         </div>
 
         {/* FC Barcelona — right mid-high */}
-        <div className="absolute z-10" style={{ top: "36%", right: "3%" }}>
+        <div className="absolute z-10 avatar-float-5" style={{ top: "36%", right: "3%" }}>
           <Avatar size={66} blur={2} opacity={0.72} ring="rgba(165,0,68,0.5)">
             <div className="w-full h-full rounded-full overflow-hidden"
               style={{ background: "linear-gradient(145deg, #a50044 0%, #004d98 55%, #a50044 100%)" }}>
@@ -171,7 +171,7 @@ export default async function Home() {
         </div>
 
         {/* Bitcoin — bottom right */}
-        <div className="absolute z-10" style={{ bottom: "22%", right: "8%" }}>
+        <div className="absolute z-10 avatar-float-6" style={{ bottom: "22%", right: "8%" }}>
           <Avatar size={72} blur={1.5} opacity={0.78} ring="rgba(247,147,26,0.5)">
             <div className="w-full h-full flex items-center justify-center rounded-full"
               style={{ background: "linear-gradient(135deg, #fbbf24 0%, #f7931a 50%, #e8820c 100%)" }}>
@@ -183,7 +183,7 @@ export default async function Home() {
         </div>
 
         {/* av2 photo — bottom center-left */}
-        <div className="absolute z-10" style={{ bottom: "28%", left: "21%" }}>
+        <div className="absolute z-10 avatar-float-7" style={{ bottom: "28%", left: "21%" }}>
           <Avatar size={50} blur={3} opacity={0.5} ring="rgba(255,255,255,0.1)">
             <Image src="/av2.jpg" alt="" width={50} height={50} className="object-cover w-full h-full" unoptimized />
           </Avatar>
