@@ -194,6 +194,45 @@ export default async function Home() {
           </Avatar>
         </div>
 
+        {/* ── MOBILE AVATAR ROW (visible only on mobile) ── */}
+        <div className="relative z-20 flex md:hidden items-end justify-center gap-4 mb-6">
+          <div className="avatar-float-3">
+            <Avatar size={48} blur={2} opacity={0.75} ring="rgba(139,92,246,0.35)">
+              <Image src="/av5.jpg" alt="" width={48} height={48} className="object-cover w-full h-full" unoptimized />
+            </Avatar>
+          </div>
+          <div className="avatar-float-1">
+            <Avatar size={58} blur={1} opacity={0.9} ring="rgba(139,92,246,0.5)">
+              <Image src="/av3.jpg" alt="" width={58} height={58} className="object-cover w-full h-full" unoptimized />
+            </Avatar>
+          </div>
+          <div className="avatar-float-5">
+            <Avatar size={52} blur={1.5} opacity={0.82} ring="rgba(247,147,26,0.45)">
+              <div className="w-full h-full flex items-center justify-center rounded-full"
+                style={{ background: "linear-gradient(135deg, #fbbf24 0%, #f7931a 50%, #e8820c 100%)" }}>
+                <svg viewBox="0 0 64 64" className="w-8 h-8" fill="white">
+                  <path d="M47 27c1-4-3-6-7-7l1-6-4-1-1 5-3-1 1-5-4-1-1 6-9-2-1 4 3 1c2 0 2 1 2 2l-4 16c0 1 0 2-2 1l-3-1-2 5 9 2-1 6 4 1 1-6 3 1-1 6 4 1 1-6c6 1 11 0 12-5 1-4-1-7-4-8 2-1 4-3 5-7zm-7 12c-1 3-6 2-8 1l2-7c2 0 8 0 6 6zm2-12c-1 3-5 2-7 1l2-6c2 0 7 0 5 5z" />
+                </svg>
+              </div>
+            </Avatar>
+          </div>
+          <div className="avatar-float-2">
+            <Avatar size={58} blur={1} opacity={0.88} ring="rgba(139,92,246,0.5)">
+              <Image src="/av1.jpg" alt="" width={58} height={58} className="object-cover w-full h-full" unoptimized />
+            </Avatar>
+          </div>
+          <div className="avatar-float-4">
+            <Avatar size={48} blur={2} opacity={0.72} ring="rgba(165,0,68,0.4)">
+              <div className="w-full h-full rounded-full overflow-hidden"
+                style={{ background: "linear-gradient(145deg, #a50044 0%, #004d98 55%, #a50044 100%)" }}>
+                <div className="w-full h-full flex flex-col items-center justify-center gap-0.5">
+                  <span className="text-white font-black text-[9px] tracking-widest">FCB</span>
+                </div>
+              </div>
+            </Avatar>
+          </div>
+        </div>
+
         {/* ── FEATURED CLAIM CARD ── */}
         <div className="relative z-20 w-full max-w-md">
           {featured ? (
