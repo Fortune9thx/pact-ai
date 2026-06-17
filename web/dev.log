@@ -1,0 +1,77 @@
+
+> dev
+> next dev -p 3000
+
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\Asuzu Emmanuel\package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * C:\Users\Asuzu Emmanuel\eristic\web\package-lock.json
+
+   ▲ Next.js 15.5.19
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.8:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 8s
+ ○ Compiling /arena ...
+ ✓ Compiled /arena in 11.4s (1947 modules)
+ GET /arena 200 in 19737ms
+GenLayer RPC error (gen_call): Server busy: all 8 execution slots occupied, retry later
+registry read failed [Error [JsonRpcVersionUnsupportedError]: Version of JSON-RPC protocol is not supported.
+
+Details: Server busy: all 8 execution slots occupied, retry later
+Version: viem@2.52.2] {
+  details: 'Server busy: all 8 execution slots occupied, retry later',
+  docsPath: undefined,
+  metaMessages: undefined,
+  shortMessage: 'Version of JSON-RPC protocol is not supported.',
+  version: '2.52.2',
+  code: -32006,
+  [cause]: [Object]
+}
+GenLayer RPC error (gen_call): Server busy: all 8 execution slots occupied, retry later
+GenLayer RPC error (gen_call): Server busy: all 8 execution slots occupied, retry later
+GenLayer RPC error (gen_call): Server busy: all 8 execution slots occupied, retry later
+GenLayer RPC error (gen_call): Server busy: all 8 execution slots occupied, retry later
+ GET /arena 200 in 2971ms
+ GET /arena 200 in 3673ms
+ GET /arena 200 in 3985ms
+ GET /arena 200 in 3668ms
+ GET /arena 200 in 3632ms
+ GET /arena 200 in 3691ms
+GenLayer RPC error (gen_call): Server busy: all 8 execution slots occupied, retry later
+registry read failed [Error [JsonRpcVersionUnsupportedError]: Version of JSON-RPC protocol is not supported.
+
+Details: Server busy: all 8 execution slots occupied, retry later
+Version: viem@2.52.2] {
+  details: 'Server busy: all 8 execution slots occupied, retry later',
+  docsPath: undefined,
+  metaMessages: undefined,
+  shortMessage: 'Version of JSON-RPC protocol is not supported.',
+  version: '2.52.2',
+  code: -32006,
+  [cause]: [Object]
+}
+GenLayer RPC error (gen_call): Server busy: all 8 execution slots occupied, retry later
+ GET /arena 200 in 2604ms
+ GET /arena 200 in 3697ms
+GenLayer RPC error (gen_call): Server busy: all 8 execution slots occupied, retry later
+GenLayer RPC error (gen_call): Server busy: all 8 execution slots occupied, retry later
+registry read failed [Error [JsonRpcVersionUnsupportedError]: Version of JSON-RPC protocol is not supported.
+
+Details: Server busy: all 8 execution slots occupied, retry later
+Version: viem@2.52.2] {
+  details: 'Server busy: all 8 execution slots occupied, retry later',
+  docsPath: undefined,
+  metaMessages: undefined,
+  shortMessage: 'Version of JSON-RPC protocol is not supported.',
+  version: '2.52.2',
+  code: -32006,
+  [cause]: [Object]
+}
+GenLayer RPC error (gen_call): Server busy: all 8 execution slots occupied, retry later
+ GET /arena 200 in 2679ms
+[?25h

@@ -1,0 +1,17 @@
+
+> deploy:bradbury
+> tsx scripts/deploy.ts --bradbury
+
+target   = bradbury
+deployer = 0xC6E6d3b2acCaECeCeB40Ad4bD3dF123DDCB4e537
+
+Phase A: deploying StakeManager ...
+
+[1/3] stake_manager.py ...
+  [1/3] status: PENDING  (+1s)          [1/3] status: COMMITTING  (+6s)          [1/3] status: REVEALING  (+390s)          [1/3] status: ACCEPTED  (+6s)          [1/3] status: READY_TO_FINALIZE  (+1794s)          [1/3] status: FINALIZED  (+6s)        
+        0x8D448ef80b81e64d4319933F8cf2A29bfacbf4FE
+
+Phase B: deploying AdjudicationContract ...
+
+[2/3] adjudication_contract.py ...
+  [2/3] status: PENDING  (+0s)          [2/3] status: COMMITTING  (+6s)          [2/3] status: REVEALING  (+419s)          [2/3] status: ACCEPTED  (+6s)        
