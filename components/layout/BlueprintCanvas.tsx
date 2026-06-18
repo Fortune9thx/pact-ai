@@ -4,7 +4,7 @@
  * BlueprintCanvas — Ambient architectural background layer.
  * Strictly GPU-rendered: transform: translate3d() rotate() only.
  * will-change: transform on every animated element.
- * Shapes: 1px SVG outlines, opacity 0.04–0.06.
+ * Shapes: 1px SVG outlines, opacity 0.12–0.18.
  */
 export function BlueprintCanvas() {
   return (
@@ -32,7 +32,7 @@ export function BlueprintCanvas() {
 
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 overflow-hidden"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
         style={{ zIndex: 0 }}
       >
         <svg
@@ -55,77 +55,77 @@ export function BlueprintCanvas() {
             {/* Outer hex */}
             <polygon
               points="1080,40 1200,110 1200,250 1080,320 960,250 960,110"
-              fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.055"
+              fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.14"
             />
             {/* Inner hex */}
             <polygon
               points="1080,88 1162,133 1162,223 1080,268 998,223 998,133"
-              fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.04"
+              fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.10"
             />
             {/* Vertex node circles */}
-            <circle cx="1080" cy="40"  r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.07" />
-            <circle cx="1200" cy="110" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.07" />
-            <circle cx="1200" cy="250" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.07" />
-            <circle cx="1080" cy="320" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.07" />
-            <circle cx="960"  cy="250" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.07" />
-            <circle cx="960"  cy="110" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.07" />
+            <circle cx="1080" cy="40"  r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.18" />
+            <circle cx="1200" cy="110" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.18" />
+            <circle cx="1200" cy="250" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.18" />
+            <circle cx="1080" cy="320" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.18" />
+            <circle cx="960"  cy="250" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.18" />
+            <circle cx="960"  cy="110" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.18" />
             {/* Spokes to inner hex */}
-            <line x1="1080" y1="40"  x2="1080" y2="88"  stroke="#110FFF" strokeWidth="1" opacity="0.04" />
-            <line x1="1200" y1="110" x2="1162" y2="133" stroke="#110FFF" strokeWidth="1" opacity="0.04" />
-            <line x1="1200" y1="250" x2="1162" y2="223" stroke="#110FFF" strokeWidth="1" opacity="0.04" />
-            <line x1="1080" y1="320" x2="1080" y2="268" stroke="#110FFF" strokeWidth="1" opacity="0.04" />
-            <line x1="960"  cy="250" x2="998"  y2="223" stroke="#110FFF" strokeWidth="1" opacity="0.04" />
-            <line x1="960"  y1="110" x2="998"  y2="133" stroke="#110FFF" strokeWidth="1" opacity="0.04" />
+            <line x1="1080" y1="40"  x2="1080" y2="88"  stroke="#110FFF" strokeWidth="1" opacity="0.10" />
+            <line x1="1200" y1="110" x2="1162" y2="133" stroke="#110FFF" strokeWidth="1" opacity="0.10" />
+            <line x1="1200" y1="250" x2="1162" y2="223" stroke="#110FFF" strokeWidth="1" opacity="0.10" />
+            <line x1="1080" y1="320" x2="1080" y2="268" stroke="#110FFF" strokeWidth="1" opacity="0.10" />
+            <line x1="960"  y1="250" x2="998"  y2="223" stroke="#110FFF" strokeWidth="1" opacity="0.10" />
+            <line x1="960"  y1="110" x2="998"  y2="133" stroke="#110FFF" strokeWidth="1" opacity="0.10" />
             {/* Inner diagonals */}
-            <line x1="998"  y1="133" x2="1162" y2="223" stroke="#110FFF" strokeWidth="1" opacity="0.03" />
-            <line x1="1162" y1="133" x2="998"  y2="223" stroke="#110FFF" strokeWidth="1" opacity="0.03" />
-            <line x1="1080" y1="88"  x2="1080" y2="268" stroke="#110FFF" strokeWidth="1" opacity="0.03" />
+            <line x1="998"  y1="133" x2="1162" y2="223" stroke="#110FFF" strokeWidth="1" opacity="0.08" />
+            <line x1="1162" y1="133" x2="998"  y2="223" stroke="#110FFF" strokeWidth="1" opacity="0.08" />
+            <line x1="1080" y1="88"  x2="1080" y2="268" stroke="#110FFF" strokeWidth="1" opacity="0.08" />
             {/* Center */}
-            <circle cx="1080" cy="180" r="10" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.06" />
-            <circle cx="1080" cy="180" r="24" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.03" strokeDasharray="4 7" />
-            <circle cx="1080" cy="180" r="3"  fill="#110FFF" opacity="0.07" />
+            <circle cx="1080" cy="180" r="10" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.16" />
+            <circle cx="1080" cy="180" r="24" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.08" strokeDasharray="4 7" />
+            <circle cx="1080" cy="180" r="3"  fill="#110FFF" opacity="0.18" />
           </g>
 
-          {/* ── Shape 2: Circuit grid fragment — bottom left ── */}
+          {/* ── Shape 2: Circuit grid fragment — bottom left (offset for sidebar) ── */}
           <g
             style={{
               willChange: "transform",
               animation: "bp-drift-2 62s ease-in-out infinite",
-              transformOrigin: "130px 680px",
+              transformOrigin: "380px 680px",
             }}
           >
             {/* Horizontal grid lines */}
-            <line x1="-80" y1="560" x2="340" y2="560" stroke="#BCA2FF" strokeWidth="1" opacity="0.05" />
-            <line x1="-80" y1="620" x2="340" y2="620" stroke="#BCA2FF" strokeWidth="1" opacity="0.05" />
-            <line x1="-80" y1="680" x2="340" y2="680" stroke="#BCA2FF" strokeWidth="1" opacity="0.05" />
-            <line x1="-80" y1="740" x2="340" y2="740" stroke="#BCA2FF" strokeWidth="1" opacity="0.05" />
-            <line x1="-80" y1="800" x2="340" y2="800" stroke="#BCA2FF" strokeWidth="1" opacity="0.05" />
+            <line x1="220" y1="560" x2="640" y2="560" stroke="#BCA2FF" strokeWidth="1" opacity="0.13" />
+            <line x1="220" y1="620" x2="640" y2="620" stroke="#BCA2FF" strokeWidth="1" opacity="0.13" />
+            <line x1="220" y1="680" x2="640" y2="680" stroke="#BCA2FF" strokeWidth="1" opacity="0.13" />
+            <line x1="220" y1="740" x2="640" y2="740" stroke="#BCA2FF" strokeWidth="1" opacity="0.13" />
+            <line x1="220" y1="800" x2="640" y2="800" stroke="#BCA2FF" strokeWidth="1" opacity="0.13" />
             {/* Vertical grid lines */}
-            <line x1="20"  y1="500" x2="20"  y2="860" stroke="#BCA2FF" strokeWidth="1" opacity="0.05" />
-            <line x1="80"  y1="500" x2="80"  y2="860" stroke="#BCA2FF" strokeWidth="1" opacity="0.05" />
-            <line x1="140" y1="500" x2="140" y2="860" stroke="#BCA2FF" strokeWidth="1" opacity="0.05" />
-            <line x1="200" y1="500" x2="200" y2="860" stroke="#BCA2FF" strokeWidth="1" opacity="0.05" />
-            <line x1="260" y1="500" x2="260" y2="860" stroke="#BCA2FF" strokeWidth="1" opacity="0.05" />
+            <line x1="280" y1="500" x2="280" y2="860" stroke="#BCA2FF" strokeWidth="1" opacity="0.13" />
+            <line x1="340" y1="500" x2="340" y2="860" stroke="#BCA2FF" strokeWidth="1" opacity="0.13" />
+            <line x1="400" y1="500" x2="400" y2="860" stroke="#BCA2FF" strokeWidth="1" opacity="0.13" />
+            <line x1="460" y1="500" x2="460" y2="860" stroke="#BCA2FF" strokeWidth="1" opacity="0.13" />
+            <line x1="520" y1="500" x2="520" y2="860" stroke="#BCA2FF" strokeWidth="1" opacity="0.13" />
             {/* Node dots */}
-            <circle cx="20"  cy="560" r="3" fill="#BCA2FF" opacity="0.12" />
-            <circle cx="80"  cy="620" r="3" fill="#BCA2FF" opacity="0.12" />
-            <circle cx="140" cy="680" r="3" fill="#BCA2FF" opacity="0.12" />
-            <circle cx="200" cy="740" r="3" fill="#BCA2FF" opacity="0.12" />
-            <circle cx="260" cy="800" r="3" fill="#BCA2FF" opacity="0.12" />
-            <circle cx="80"  cy="560" r="3" fill="#BCA2FF" opacity="0.10" />
-            <circle cx="200" cy="620" r="3" fill="#BCA2FF" opacity="0.10" />
-            <circle cx="20"  cy="740" r="3" fill="#BCA2FF" opacity="0.10" />
-            <circle cx="140" cy="800" r="3" fill="#BCA2FF" opacity="0.10" />
+            <circle cx="280" cy="560" r="3" fill="#BCA2FF" opacity="0.22" />
+            <circle cx="340" cy="620" r="3" fill="#BCA2FF" opacity="0.22" />
+            <circle cx="400" cy="680" r="3" fill="#BCA2FF" opacity="0.22" />
+            <circle cx="460" cy="740" r="3" fill="#BCA2FF" opacity="0.22" />
+            <circle cx="520" cy="800" r="3" fill="#BCA2FF" opacity="0.22" />
+            <circle cx="340" cy="560" r="3" fill="#BCA2FF" opacity="0.18" />
+            <circle cx="460" cy="620" r="3" fill="#BCA2FF" opacity="0.18" />
+            <circle cx="280" cy="740" r="3" fill="#BCA2FF" opacity="0.18" />
+            <circle cx="400" cy="800" r="3" fill="#BCA2FF" opacity="0.18" />
             {/* Circuit trace paths */}
-            <path d="M20,560 L80,560 L80,620 L140,620 L140,680"
-              fill="none" stroke="#BCA2FF" strokeWidth="1" opacity="0.06" strokeDasharray="3 5" />
-            <path d="M200,620 L200,680 L260,680 L260,740"
-              fill="none" stroke="#BCA2FF" strokeWidth="1" opacity="0.06" strokeDasharray="3 5" />
-            <path d="M20,680 L80,680 L80,740 L20,740"
-              fill="none" stroke="#BCA2FF" strokeWidth="1" opacity="0.05" />
+            <path d="M280,560 L340,560 L340,620 L400,620 L400,680"
+              fill="none" stroke="#BCA2FF" strokeWidth="1" opacity="0.14" strokeDasharray="3 5" />
+            <path d="M460,620 L460,680 L520,680 L520,740"
+              fill="none" stroke="#BCA2FF" strokeWidth="1" opacity="0.14" strokeDasharray="3 5" />
+            <path d="M280,680 L340,680 L340,740 L280,740"
+              fill="none" stroke="#BCA2FF" strokeWidth="1" opacity="0.12" />
             {/* Sweep arc */}
-            <path d="M-80,640 Q140,500 340,660"
-              fill="none" stroke="#BCA2FF" strokeWidth="1" opacity="0.04" strokeDasharray="6 9" />
+            <path d="M220,640 Q400,500 640,660"
+              fill="none" stroke="#BCA2FF" strokeWidth="1" opacity="0.10" strokeDasharray="6 9" />
           </g>
 
           {/* ── Shape 3: Concentric rings + diamond — center canvas ── */}
@@ -133,29 +133,29 @@ export function BlueprintCanvas() {
             style={{
               willChange: "transform",
               animation: "bp-drift-3 48s ease-in-out infinite",
-              transformOrigin: "680px 500px",
+              transformOrigin: "860px 500px",
             }}
           >
             {/* Concentric dashed circles */}
-            <circle cx="680" cy="500" r="160" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.04" strokeDasharray="8 11" />
-            <circle cx="680" cy="500" r="220" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.03" strokeDasharray="4 15" />
-            <circle cx="680" cy="500" r="300" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.025" strokeDasharray="2 20" />
+            <circle cx="860" cy="500" r="160" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.10" strokeDasharray="8 11" />
+            <circle cx="860" cy="500" r="220" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.07" strokeDasharray="4 15" />
+            <circle cx="860" cy="500" r="300" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.05" strokeDasharray="2 20" />
             {/* Diamond */}
             <polygon
-              points="680,360 820,500 680,640 540,500"
-              fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.04"
+              points="860,360 1000,500 860,640 720,500"
+              fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.10"
             />
             {/* Crosshairs */}
-            <line x1="380" y1="500" x2="980" y2="500" stroke="#110FFF" strokeWidth="1" opacity="0.03" strokeDasharray="10 9" />
-            <line x1="680" y1="200" x2="680" y2="800" stroke="#110FFF" strokeWidth="1" opacity="0.03" strokeDasharray="10 9" />
+            <line x1="560" y1="500" x2="1160" y2="500" stroke="#110FFF" strokeWidth="1" opacity="0.07" strokeDasharray="10 9" />
+            <line x1="860" y1="200" x2="860"  y2="800" stroke="#110FFF" strokeWidth="1" opacity="0.07" strokeDasharray="10 9" />
             {/* Diamond vertex nodes */}
-            <circle cx="680" cy="360" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.06" />
-            <circle cx="820" cy="500" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.06" />
-            <circle cx="680" cy="640" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.06" />
-            <circle cx="540" cy="500" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.06" />
+            <circle cx="860" cy="360" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.15" />
+            <circle cx="1000" cy="500" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.15" />
+            <circle cx="860" cy="640" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.15" />
+            <circle cx="720" cy="500" r="4" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.15" />
             {/* Center target */}
-            <circle cx="680" cy="500" r="14" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.06" />
-            <circle cx="680" cy="500" r="4"  fill="#110FFF" opacity="0.07" />
+            <circle cx="860" cy="500" r="14" fill="none" stroke="#110FFF" strokeWidth="1" opacity="0.14" />
+            <circle cx="860" cy="500" r="4"  fill="#110FFF" opacity="0.18" />
           </g>
 
         </svg>

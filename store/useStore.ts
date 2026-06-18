@@ -22,6 +22,7 @@ interface AppStore {
 
 const defaultWallet: WalletState = {
   address: null,
+  walletAddress: null,
   isConnected: false,
   balance: "0",
   chainName: "GenLayer Testnet",

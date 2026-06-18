@@ -18,7 +18,7 @@ import { truncateAddress, formatGEN, statusLabel } from "@/lib/utils";
 import { getInviteUrl } from "@/lib/invite";
 import {
   ArrowLeft, User, Copy, CheckCircle2, ExternalLink,
-  Brain, Share2, Clock, Banknote, AlertTriangle, ThumbsUp,
+  Brain, Share2, Clock, Banknote, AlertTriangle, ThumbsUp, Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -33,7 +33,7 @@ function statusVariant(status: string) {
 
 export default function DealDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { deal, loading, refetch } = useDeal(id);
+  const { deal, isPending, loading, refetch } = useDeal(id);
   const { wallet } = useWallet();
   const approveWork     = useApproveWork();
   const requestAIReview = useRequestAIReview();
@@ -82,21 +82,38 @@ export default function DealDetailPage({ params }: { params: Promise<{ id: strin
     );
   }
 
+  // Disable all actions while the deal is still being confirmed by GenLayer validators
+  const blockActions = isPending;
+
   const isBuyer  = wallet.address?.toLowerCase() === deal.buyer.toLowerCase();
   const isSeller = deal.seller !== "" && wallet.address?.toLowerCase() === deal.seller.toLowerCase();
   const inviteUrl = getInviteUrl(deal.id);
 
   // Action availability
-  const canApprove       = isBuyer && deal.status === "SUBMITTED";
-  const canRequestAI     = isBuyer && deal.status === "SUBMITTED";
-  const canReleaseAfterAI = isBuyer && deal.status === "AI_REVIEWED";
-  const canSubmit        = isSeller && deal.status === "FUNDED";
-  const canCancel        = isBuyer && ["PENDING", "FUNDED"].includes(deal.status);
+  const canApprove       = !blockActions && isBuyer && deal.status === "SUBMITTED";
+  const canRequestAI     = !blockActions && isBuyer && deal.status === "SUBMITTED";
+  const canReleaseAfterAI = !blockActions && isBuyer && deal.status === "AI_REVIEWED";
+  const canSubmit        = !blockActions && isSeller && deal.status === "FUNDED";
+  const canCancel        = !blockActions && isBuyer && ["PENDING", "FUNDED"].includes(deal.status);
   const isAIReviewing    = deal.status === "AI_REVIEWED" && !deal.aiVerdict;
 
   return (
     <div className="max-w-5xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
+
+        {/* Confirming banner — shown while GenLayer validators process the transaction */}
+        {isPending && (
+          <div className="flex items-center gap-3 mb-5 px-4 py-3 rounded-xl border border-indigo-200 bg-indigo-50">
+            <Loader2 className="size-4 text-indigo-500 shrink-0 animate-spin" />
+            <div>
+              <p className="text-sm font-semibold text-indigo-700">Confirming on GenLayer</p>
+              <p className="text-xs text-indigo-500 mt-0.5">
+                Your deal was submitted. GenLayer validators are processing it — this takes 30–120 seconds.
+                This page will update automatically.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Back + header */}
         <div className="flex items-center gap-4 mb-6">
@@ -255,11 +272,11 @@ export default function DealDetailPage({ params }: { params: Promise<{ id: strin
                     size="sm"
                     variant="secondary"
                     className="flex-1 gap-2"
-                    onClick={() => run("ai", () => requestAIReview(deal.id))}
-                    loading={actionLoading === "ai"}
+                    onClick={() => run("ai-review", () => requestAIReview(deal.id))}
+                    loading={actionLoading === "ai-review"}
                   >
-                    {actionLoading !== "ai" && <Brain className="size-3.5" />}
-                    {actionLoading === "ai" ? "AI Reviewing… (1–2 min)" : "Request AI Review"}
+                    {actionLoading !== "ai-review" && <Brain className="size-3.5" />}
+                    Request AI Review
                   </Button>
                 </CardContent>
               </Card>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { TransactionStatus } from "@/components/wallet/TransactionStatus";
+import { Web3Provider } from "@/components/providers/Web3Provider";
 
 export const metadata: Metadata = {
   title: "Pact: AI-Powered Creative Escrow",
@@ -31,8 +32,10 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full bg-[var(--color-background)] text-[var(--color-foreground)]">
-        {children}
-        <TransactionStatus />
+        <Web3Provider>
+          {children}
+          <TransactionStatus />
+        </Web3Provider>
       </body>
     </html>
   );

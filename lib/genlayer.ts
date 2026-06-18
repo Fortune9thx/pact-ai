@@ -5,30 +5,45 @@ const activeChain =
     ? chains.testnetBradbury
     : chains.studionet;
 
-// Demo account for studionet transactions (testnet only, no real funds)
-const DEMO_KEY = process.env.NEXT_PUBLIC_DEMO_KEY as `0x${string}` | undefined;
-export const demoAccount = DEMO_KEY ? createAccount(DEMO_KEY) : null;
+export const BRADBURY_RPC_DIRECT = "https://rpc-bradbury.genlayer.com";
 
-export function createGenLayerClient() {
-  if (typeof window !== "undefined" && window.ethereum) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return createClient({ chain: activeChain, provider: window.ethereum as any });
+export type LocalAccount = ReturnType<typeof createAccount>;
+
+export function getProxyRpcUrl(): string {
+  if (typeof window !== "undefined") {
+    return `${window.location.origin}/api/rpc`;
   }
-  if (demoAccount) {
-    return createClient({ chain: activeChain, account: demoAccount });
-  }
-  return createClient({ chain: activeChain });
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://pact-ai.vercel.app";
+  return `${appUrl}/api/rpc`;
 }
 
-let readClient: ReturnType<typeof createClient> | null = null;
+// LocalAccount path: genlayer-js uses its own HTTP fetch with Date.now() integer IDs.
+// This bypasses the wallet's RPC transport, avoiding Bradbury's rejection of UUID string IDs.
+export function createGenLayerClient(account: LocalAccount) {
+  return createClient({
+    chain: activeChain,
+    endpoint: getProxyRpcUrl(),
+    account,
+  } as Parameters<typeof createClient>[0]);
+}
+
+export { createAccount };
 
 export function getReadClient() {
-  if (!readClient) {
-    readClient = createClient({ chain: activeChain });
-  }
-  return readClient;
+  return createClient({
+    chain: activeChain,
+    endpoint: BRADBURY_RPC_DIRECT,
+  });
 }
 
 export const CONTRACT_ADDRESS = (process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? "") as `0x${string}`;
+
+export const BRADBURY_CHAIN_PARAMS = {
+  chainId: "0x107D",
+  chainName: "GenLayer Bradbury Testnet",
+  nativeCurrency: { name: "GEN", symbol: "GEN", decimals: 18 },
+  rpcUrls: ["https://rpc-bradbury.genlayer.com"],
+  blockExplorerUrls: ["https://explorer-bradbury.genlayer.com"],
+} as const;
 
 export { activeChain };

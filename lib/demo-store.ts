@@ -6,7 +6,7 @@
 
 import type { Deal, DealStatus, AIVerdict, DashboardStats } from "./types";
 
-export const DEMO_BUYER   = "0xbbe0bf384d3ec8e5966a892cdd033e67eb556aa2"; // deployer key
+export const DEMO_BUYER   = "0xC6E6d3b2acCaECeCeB40Ad4bD3dF123DDCB4e537"; // deployer
 export const DEMO_SELLER  = "0x1234567890abcdef1234567890abcdef12345678"; // second persona
 const LS_KEY = "pact_demo_deals_v4";
 

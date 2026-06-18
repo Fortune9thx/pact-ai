@@ -286,3 +286,41 @@ body {
     opacity: 0.6;
   }
 }
+
+/* ── Feature Card — Under-Glow Hover System ──────────────────────── */
+/*
+ * .feature-card — lifts on hover with a blurred brand-colour glow
+ * bleeding out from behind the card. overflow: visible is intentional
+ * so the blurred ::before is not clipped.
+ */
+.feature-card {
+  position: relative;
+  overflow: visible !important;
+  transition:
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.3s ease;
+  isolation: isolate;
+}
+
+/* Blurred glow layer sits directly behind the card */
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #BCA2FF, #110FFF);
+  filter: blur(14px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* Hover — lift the card and reveal the under-glow */
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px -10px rgba(40, 43, 93, 0.12);
+}
+.feature-card:hover::before {
+  opacity: 0.18;
+}

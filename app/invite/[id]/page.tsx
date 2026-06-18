@@ -6,18 +6,16 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useDeal, useClaimDeal } from "@/hooks/useDeal";
 import { useWallet } from "@/hooks/useWallet";
-import { useStore } from "@/store/useStore";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatGEN, truncateAddress } from "@/lib/utils";
-import { DEMO_SELLER } from "@/lib/demo-store";
 import {
   Shield, Zap, CheckCircle2, AlertTriangle, Clock,
-  Banknote, FileText, Wallet, ArrowRight, ExternalLink, UserCheck,
+  Banknote, FileText, Wallet, ArrowRight, ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 /* ── helpers ── */
 function badgeVariant(status: string) {
@@ -32,8 +30,8 @@ export default function InvitePage({ params }: { params: Promise<{ id: string }>
   const { id } = use(params);
   const router = useRouter();
   const { deal, loading } = useDeal(id);
-  const { wallet, connect } = useWallet();
-  const { setWallet } = useStore();
+  const { wallet } = useWallet();
+  const { openConnectModal } = useConnectModal();
   const claimDeal = useClaimDeal();
 
   const [claiming, setClaiming] = useState(false);
@@ -52,7 +50,7 @@ export default function InvitePage({ params }: { params: Promise<{ id: string }>
   }, [isAlreadyMySeller, deal?.status, id, router]);
 
   const handleClaim = async () => {
-    if (!wallet.isConnected) { connect(); return; }
+    if (!wallet.isConnected) { openConnectModal?.(); return; }
     setClaiming(true);
     setClaimError(null);
     try {
@@ -250,12 +248,12 @@ export default function InvitePage({ params }: { params: Promise<{ id: string }>
           {/* CTA */}
           {!wallet.isConnected ? (
             <div className="flex flex-col gap-3">
-              <Button size="lg" className="w-full gap-2" onClick={connect}>
+              <Button size="lg" className="w-full gap-2" onClick={() => openConnectModal?.()}>
                 <Wallet className="size-4" />
                 Connect Wallet to Accept
               </Button>
               <p className="text-center text-xs text-[var(--color-muted-foreground)]">
-                You&apos;ll need a Web3 wallet (MetaMask, etc.) to accept and receive payment.
+                You&apos;ll need an EVM wallet (MetaMask, OKX, Rabby, etc.) to accept and receive payment.
               </p>
             </div>
           ) : wallet.address?.toLowerCase() === deal.buyer.toLowerCase() ? (
@@ -269,21 +267,6 @@ export default function InvitePage({ params }: { params: Promise<{ id: string }>
                   You created this deal. You cannot be the seller.
                 </p>
               </div>
-              {IS_DEMO && (
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="w-full gap-2"
-                  onClick={() => setWallet({
-                    address: DEMO_SELLER as `0x${string}`,
-                    balance: "50.0000",
-                    chainName: "Demo Mode (Seller)",
-                  })}
-                >
-                  <UserCheck className="size-3.5" />
-                  Switch to Seller persona (demo)
-                </Button>
-              )}
             </div>
           ) : (
             <div className="flex flex-col gap-3">

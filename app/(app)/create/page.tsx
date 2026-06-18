@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateDeal } from "@/hooks/useDeal";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useWallet } from "@/hooks/useWallet";
 import { getInviteUrl } from "@/lib/invite";
 import {
@@ -129,7 +131,7 @@ function AIGuardPanel() {
               />
             </span>
             <p className="text-[11px] font-semibold" style={{ color: "#110FFF" }}>
-              GenLayer Studionet
+              GenLayer Bradbury
             </p>
           </div>
         </div>
@@ -142,7 +144,9 @@ function AIGuardPanel() {
 
 export default function CreateDealPage() {
   const createDeal = useCreateDeal();
-  const { wallet, connect } = useWallet();
+  const { wallet } = useWallet();
+  const { openConnectModal } = useConnectModal();
+  const router = useRouter();
 
   const [step, setStep]               = useState<Step>("brief");
   const [prompt, setPrompt]           = useState("");
@@ -164,7 +168,7 @@ export default function CreateDealPage() {
   const validateTerms = () => {
     const e: Record<string, string> = {};
     const amt = parseFloat(amount);
-    if (isNaN(amt) || amt <= 0) e.amount = "Enter a valid GEN amount";
+    if (isNaN(amt) || amt <= 0) e.amount = "Enter a positive GEN amount (e.g. 5 or 0.5)";
     const d = parseInt(deadline);
     if (isNaN(d) || d < 1 || d > 90) e.deadline = "Deadline must be 1-90 days";
     setErrors(e);
@@ -181,6 +185,8 @@ export default function CreateDealPage() {
       const dealId = await createDeal({ prompt: prompt.trim(), deadline: parseInt(deadline), amount });
       setCreatedDealId(dealId);
       setStep("share");
+      // Redirect to the deal page so the user can see all deal options immediately
+      router.push(`/deal/${dealId}`);
     } catch (err) {
       console.error("Create deal failed:", err);
     } finally {
@@ -439,7 +445,7 @@ export default function CreateDealPage() {
                         type="number"
                         min="0.01"
                         step="0.01"
-                        placeholder="0.00"
+                        placeholder="5"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                         suffix="GEN"
@@ -469,8 +475,8 @@ export default function CreateDealPage() {
                       <div>
                         <p className="text-xs font-semibold mb-0.5" style={{ color: "#282B5D" }}>How it works</p>
                         <p className="text-xs leading-relaxed" style={{ color: "#8888AA" }}>
-                          GEN tokens are held in escrow. You review the work when delivered. Approve to release payment,
-                          or request an AI review for a second opinion.
+                          Real GEN tokens lock in the smart contract. Approve to release to the seller,
+                          cancel to get a full refund, or request an AI review for a second opinion.
                         </p>
                       </div>
                     </div>
@@ -485,7 +491,7 @@ export default function CreateDealPage() {
                       <Button
                         type="button"
                         variant="secondary"
-                        onClick={connect}
+                        onClick={() => openConnectModal?.()}
                         className="gap-2"
                         style={{ minWidth: "220px" }}
                       >

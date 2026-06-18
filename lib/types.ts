@@ -104,6 +104,7 @@ export interface Transaction {
 
 export interface WalletState {
   address: string | null;
+  walletAddress: string | null;
   isConnected: boolean;
   balance: string;
   chainName: string;
