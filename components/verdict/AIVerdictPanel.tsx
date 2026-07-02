@@ -184,13 +184,15 @@ export function AIVerdictPanel({
         </p>
       </div>
 
-      {/* Score breakdown */}
-      <ScoreBreakdown
-        styleMatch={verdict.style_match ?? verdict.styleMatch ?? 0}
-        promptAlignment={verdict.prompt_alignment ?? verdict.promptAlignment ?? 0}
-        qualityMatch={verdict.quality_match ?? verdict.qualityMatch ?? 0}
-        confidence={verdict.confidence}
-      />
+      {/* Score breakdown — only shown when rich fields are present */}
+      {(verdict.style_match != null || verdict.styleMatch != null) && (
+        <ScoreBreakdown
+          styleMatch={verdict.style_match ?? verdict.styleMatch ?? 0}
+          promptAlignment={verdict.prompt_alignment ?? verdict.promptAlignment ?? 0}
+          qualityMatch={verdict.quality_match ?? verdict.qualityMatch ?? 0}
+          confidence={verdict.confidence}
+        />
+      )}
 
       {/* Buyer decision panel */}
       {canAct && (
