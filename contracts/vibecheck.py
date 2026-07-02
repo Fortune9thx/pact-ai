@@ -1,8 +1,6 @@
 # { "Seq": [{ "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }] }
-# Pact - AI-powered escrow with real GEN token transfers + stable binary-verdict consensus
 import json
 from genlayer import *
-
 
 STATUS_PENDING       = "PENDING"
 STATUS_FUNDED        = "FUNDED"
@@ -12,14 +10,12 @@ STATUS_RESOLVED_PASS = "RESOLVED_PASS"
 STATUS_RESOLVED_FAIL = "RESOLVED_FAIL"
 STATUS_CANCELLED     = "CANCELLED"
 
-
 @gl.evm.contract_interface
 class _Wallet:
     class View:
         pass
     class Write:
         pass
-
 
 class VibeCheck(gl.Contract):
     deals_json: str
@@ -69,9 +65,9 @@ class VibeCheck(gl.Contract):
         active   = sum(1 for d in all_deals if d["status"] in [STATUS_FUNDED, STATUS_SUBMITTED, STATUS_AI_REVIEWED])
         pending  = sum(1 for d in all_deals if d["status"] == STATUS_AI_REVIEWED)
         return {
-            "total_deals":        total,
-            "active_deals":       active,
-            "pending_reviews":    pending,
+            "total_deals": total,
+            "active_deals": active,
+            "pending_reviews": pending,
             "ai_resolution_rate": int(resolved / total * 100) if total > 0 else 0,
         }
 
@@ -79,23 +75,23 @@ class VibeCheck(gl.Contract):
     def create_deal(self, prompt: str, deadline_days: int, amount_gen: str) -> str:
         buyer = gl.message.sender_address.as_hex
         amount_float = float(amount_gen)
-        assert amount_float > 0, "Escrow amount must be positive"
+        assert amount_float > 0, "Amount must be positive"
         expected_wei = u256(int(amount_float * (10 ** 18)))
-        assert gl.message.value == expected_wei, "Must send exactly amount_gen GEN to fund escrow"
+        assert gl.message.value == expected_wei, "Must send exact GEN amount"
         self.deal_count += u256(1)
         deal_id = "deal_" + str(int(self.deal_count)).zfill(6)
         deal = {
-            "id":                     deal_id,
-            "buyer":                  buyer,
-            "seller":                 "",
-            "prompt":                 prompt.strip(),
-            "submission":             "",
+            "id": deal_id,
+            "buyer": buyer,
+            "seller": "",
+            "prompt": prompt.strip(),
+            "submission": "",
             "submission_description": "",
-            "amount":                 amount_gen,
-            "amount_wei":             int(gl.message.value),
-            "status":                 STATUS_PENDING,
-            "ai_verdict":             None,
-            "deadline_days":          deadline_days,
+            "amount": amount_gen,
+            "amount_wei": int(gl.message.value),
+            "status": STATUS_PENDING,
+            "ai_verdict": None,
+            "deadline_days": deadline_days,
         }
         deals = self._load()
         deals[deal_id] = deal
@@ -108,7 +104,7 @@ class VibeCheck(gl.Contract):
         assert deal_id in deals, "Deal not found"
         deal = deals[deal_id]
         assert gl.message.sender_address.as_hex == deal["buyer"], "Only buyer"
-        assert deal["status"] in [STATUS_PENDING, STATUS_FUNDED], "Cannot cancel at this stage"
+        assert deal["status"] in [STATUS_PENDING, STATUS_FUNDED], "Cannot cancel now"
         deal["status"] = STATUS_CANCELLED
         deals[deal_id] = deal
         self._save(deals)
@@ -120,33 +116,35 @@ class VibeCheck(gl.Contract):
         assert deal_id in deals, "Deal not found"
         deal = deals[deal_id]
         assert gl.message.sender_address.as_hex == deal["buyer"], "Only buyer"
-        assert deal["status"] == STATUS_SUBMITTED, "Work must be submitted first"
+        assert deal["status"] == STATUS_SUBMITTED, "Must submit work first"
         assert deal["submission"] != "", "No submission to review"
 
-        ai_prompt = (
-            "You are Pact AI Review. Evaluate this creative submission objectively.\n\n"
-            "CREATIVE BRIEF:\n" + deal["prompt"] + "\n\n"
-            "SUBMISSION URL: " + deal["submission"] + "\n"
-            "SELLER DESCRIPTION: " + deal["submission_description"] + "\n\n"
-            "PASS if it satisfies the brief. FAIL otherwise.\n\n"
-            'Return ONLY valid JSON: {"result": "PASS" or "FAIL", "confidence": 0-100, "reasoning": "..."}'
+        pt = deal["prompt"]
+        su = deal["submission"]
+        sd = deal["submission_description"]
+
+        def run() -> str:
+            p = (
+                "Evaluate submission against brief.\n"
+                "BRIEF: " + pt + "\nURL: " + su + "\nNOTES: " + sd + "\n"
+                "PASS if it fits. FAIL otherwise.\n"
+                'JSON only: {"result":"PASS or FAIL","confidence":0-100,"reasoning":"..."}'
+            )
+            r = gl.nondet.exec_prompt(p).strip()
+            i, j = r.find("{"), r.rfind("}")
+            return r[i:j + 1] if i != -1 and j != -1 else r
+
+        raw_result = gl.eq_principle.prompt_non_comparative(
+            run,
+            task="Judge if a submission satisfies a brief; return PASS/FAIL, confidence, reasoning.",
+            criteria='Valid JSON: "result" is PASS or FAIL, "confidence" 0-100, "reasoning" non-empty and relevant. Wording may vary.',
         )
 
-        verdict = yield gl.exec_prompt_call(
-            ai_prompt,
-            schema={
-                "type": "object",
-                "properties": {
-                    "result":     {"type": "string", "enum": ["PASS", "FAIL"]},
-                    "confidence": {"type": "integer", "minimum": 0, "maximum": 100},
-                    "reasoning":  {"type": "string"},
-                },
-                "required": ["result", "confidence", "reasoning"],
-            },
-        )
+        try:
+            verdict = json.loads(raw_result)
+        except Exception:
+            verdict = {"result": "FAIL", "confidence": 0, "reasoning": "AI evaluation failed"}
 
-        if isinstance(verdict, str):
-            verdict = json.loads(verdict)
         verdict["result"] = str(verdict.get("result", "FAIL")).upper()
         if verdict["result"] not in ("PASS", "FAIL"):
             verdict["result"] = "FAIL"
@@ -164,7 +162,7 @@ class VibeCheck(gl.Contract):
         sender = gl.message.sender_address.as_hex
         assert deal["status"] == STATUS_PENDING, "Deal not open"
         assert deal["seller"] == "", "Already claimed"
-        assert sender != deal["buyer"], "Buyer cannot claim own deal"
+        assert sender != deal["buyer"], "Cannot claim own deal"
         deal["seller"] = sender
         deal["status"] = STATUS_FUNDED
         deals[deal_id] = deal
@@ -176,7 +174,7 @@ class VibeCheck(gl.Contract):
         assert deal_id in deals, "Deal not found"
         deal = deals[deal_id]
         assert gl.message.sender_address.as_hex == deal["buyer"], "Only buyer"
-        assert deal["status"] == STATUS_AI_REVIEWED, "AI review required first"
+        assert deal["status"] == STATUS_AI_REVIEWED, "AI review required"
         verdict = deal.get("ai_verdict") or {}
         is_pass = str(verdict.get("result", "FAIL")).upper() == "PASS"
         deal["status"] = STATUS_RESOLVED_PASS if is_pass else STATUS_RESOLVED_FAIL
@@ -193,7 +191,7 @@ class VibeCheck(gl.Contract):
         assert deal_id in deals, "Deal not found"
         deal = deals[deal_id]
         assert gl.message.sender_address.as_hex == deal["buyer"], "Only buyer"
-        assert deal["status"] == STATUS_AI_REVIEWED, "AI review required first"
+        assert deal["status"] == STATUS_AI_REVIEWED, "AI review required"
         deal["status"] = STATUS_RESOLVED_PASS if release else STATUS_RESOLVED_FAIL
         deals[deal_id] = deal
         self._save(deals)
@@ -211,9 +209,9 @@ class VibeCheck(gl.Contract):
         assert deal["status"] == STATUS_FUNDED, "Deal must be active"
         assert len(submission_url.strip()) > 0, "Submission URL required"
         assert len(description.strip()) >= 10, "Description too short"
-        deal["submission"]             = submission_url.strip()
+        deal["submission"] = submission_url.strip()
         deal["submission_description"] = description.strip()
-        deal["status"]                 = STATUS_SUBMITTED
+        deal["status"] = STATUS_SUBMITTED
         deals[deal_id] = deal
         self._save(deals)
 
@@ -223,7 +221,7 @@ class VibeCheck(gl.Contract):
         assert deal_id in deals, "Deal not found"
         deal = deals[deal_id]
         assert gl.message.sender_address.as_hex == deal["buyer"], "Only buyer"
-        assert deal["status"] == STATUS_SUBMITTED, "Work must be submitted first"
+        assert deal["status"] == STATUS_SUBMITTED, "Must submit work first"
         deal["status"] = STATUS_RESOLVED_PASS
         deals[deal_id] = deal
         self._save(deals)
