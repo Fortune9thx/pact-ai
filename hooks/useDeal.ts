@@ -170,7 +170,7 @@ export function useCreateDeal() {
       const amountWei = BigInt(Math.round(amountFloat * 10 ** 18));
       await executeWrite({
         functionName: "create_deal",
-        args: [prompt, deadline, String(amountFloat)],
+        args: [prompt, deadline, amountFloat],
         value: amountWei,
         label: "Creating protected agreement & locking GEN escrow",
       });

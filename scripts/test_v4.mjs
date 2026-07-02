@@ -108,7 +108,7 @@ async function run() {
     [
       "Design a modern dark-themed SaaS landing page with glassmorphism hero, pricing table, and animated CTA buttons",
       14,
-      String(AMOUNT_GEN),
+      AMOUNT_GEN,
     ],
     AMOUNT_WEI  // ← msg.value — this is the fix being tested
   );
@@ -127,14 +127,30 @@ async function run() {
   if (Math.abs(locked - AMOUNT_GEN) < 0.001) pass(`Contract locked +${locked.toFixed(4)} GEN ✓`);
   else                                         fail(`Contract balance delta wrong: +${locked.toFixed(4)} GEN`);
 
+  // ── Fund seller for gas ──────────────────────────────────────────
+  section("[1b] Fund seller wallet for gas");
+  const GAS_FUND = BigInt(1e17); // 0.1 GEN — covers gas for all seller TXs
+  const fundHash = await buyerClient.sendTransaction({
+    to: sellerAccount.address,
+    value: GAS_FUND,
+  });
+  console.log(`    Fund TX: ${fundHash}`);
+  // Plain ETH transfers don't go through GenLayer consensus — poll balance instead
+  for (let i = 0; i < 30; i++) {
+    await new Promise(r => setTimeout(r, 4000));
+    const bal = await getBalance(sellerAccount.address);
+    if (bal > 0) { pass(`Seller funded with ${bal} GEN for gas`); break; }
+    if (i === 29) { fail("Seller funding timed out"); process.exit(1); }
+  }
+
   // ── Step 2: claim_deal ───────────────────────────────────────────
   section("[2] claim_deal — seller registers");
   await write(sellerClient, "claim_deal", [dealId]);
   const d2 = await read(buyerClient, "get_deal", [dealId]);
   if (d2.status === "FUNDED") pass("Status = FUNDED ✓");
   else                         fail(`Status should be FUNDED, got ${d2.status}`);
-  if (d2.seller === sellerAccount.address.toLowerCase()) pass("Seller address recorded ✓");
-  else                                                    fail(`Seller mismatch: ${d2.seller}`);
+  if (d2.seller.toLowerCase() === sellerAccount.address.toLowerCase()) pass("Seller address recorded ✓");
+  else                                                                  fail(`Seller mismatch: ${d2.seller}`);
 
   // ── Step 3: submit_work ──────────────────────────────────────────
   section("[3] submit_work — seller delivers");
@@ -150,7 +166,19 @@ async function run() {
   // ── Step 4: request_ai_review (the consensus fix is tested here) ─
   section("[4] request_ai_review — binary enum consensus (1-3 min)");
   console.log("  Sending transaction — validators will independently run AI evaluation...");
-  await write(buyerClient, "request_ai_review", [dealId], BigInt(0), 100);
+  const aiHash = await buyerClient.writeContract({ address: CONTRACT, functionName: "request_ai_review", args: [dealId], value: BigInt(0) });
+  console.log(`    TX: ${aiHash}`);
+  // Poll deal status directly — more reliable than waitForTransactionReceipt for consensus TXs
+  console.log("  Polling for AI_REVIEWED status (up to 5 min)...");
+  let aiReviewed = false;
+  for (let i = 0; i < 60; i++) {
+    await new Promise(r => setTimeout(r, 5000));
+    const d = await read(buyerClient, "get_deal", [dealId]);
+    process.stdout.write(`\r  [${i+1}/60] status: ${d.status}   `);
+    if (d.status === "AI_REVIEWED") { aiReviewed = true; console.log(""); break; }
+    if (["RESOLVED_PASS","RESOLVED_FAIL","CANCELLED"].includes(d.status)) break;
+  }
+  console.log("");
 
   const d4 = await read(buyerClient, "get_deal", [dealId]);
   if (d4.status === "AI_REVIEWED") pass("Status = AI_REVIEWED ✓ (consensus reached)");
