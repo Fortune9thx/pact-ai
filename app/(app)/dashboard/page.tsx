@@ -245,15 +245,20 @@ export default function DashboardPage() {
       const pending = myBuyingDeals.filter(d => d.status === "PENDING").length;
       const done    = myBuyingDeals.filter(d => ["RESOLVED_PASS","RESOLVED_FAIL","CANCELLED"].includes(d.status)).length;
       const volume  = myBuyingDeals.reduce((s, d) => s + (parseFloat(String(d.amount)) || 0), 0);
-      return { active, pending, done, volume };
+      return { active, pending, done, volume, scope: "mine" as const };
     }
     // Not connected — summarise all deals in view.
     const active  = deals.filter(d => ["PENDING","FUNDED","SUBMITTED","AI_REVIEWED"].includes(d.status)).length;
     const pending = deals.filter(d => d.status === "PENDING").length;
     const done    = deals.filter(d => ["RESOLVED_PASS","RESOLVED_FAIL","CANCELLED"].includes(d.status)).length;
     const volume  = deals.reduce((s, d) => s + (parseFloat(String(d.amount)) || 0), 0);
-    return { active, pending, done, volume };
+    return { active, pending, done, volume, scope: "all" as const };
   }, [wallet.isConnected, deals, myBuyingDeals, mySellingDeals]);
+
+  // When connected but the user has no deals of their own, the cards read
+  // 0/0/0/0 even though there may be open deals below — surface that instead
+  // of looking broken.
+  const hasNoOwnDeals = stats.scope === "mine" && stats.active === 0 && stats.pending === 0 && stats.done === 0;
 
   // Active + pending grouped by recency (latest id last in array = highest id)
   const myActiveDeals = useMemo(() => [
@@ -308,6 +313,12 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Stats ── */}
+      {hasNoOwnDeals && (
+        <p className="text-xs mb-2" style={{ color: "#9CA3AF" }}>
+          You have no deals yet — figures below are yours only.{" "}
+          {deals.length > 0 && "Browse the open market to get started."}
+        </p>
+      )}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
         <StatCard index={0} label="Active"       value={String(stats.active)}  sub="In progress"         icon={Zap}       accent="#6366F1" />
         <StatCard index={1} label="Awaiting"     value={String(stats.pending)} sub="Need seller"         icon={Clock}     accent="#F59E0B" />

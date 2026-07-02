@@ -27,16 +27,17 @@ export function deadlineEnd(deal: Deal): number {
   return resolveAnchor(deal) + (deal.deadline || 0) * 86_400;
 }
 
-function format(remainingSec: number): string {
+function format(remainingSec: number, compact: boolean): string {
   if (remainingSec <= 0) return "Overdue";
   const d = Math.floor(remainingSec / 86_400);
   const h = Math.floor((remainingSec % 86_400) / 3_600);
   const m = Math.floor((remainingSec % 3_600) / 60);
   const s = Math.floor(remainingSec % 60);
-  if (d > 0) return `${d}d ${h}h left`;
-  if (h > 0) return `${h}h ${m}m left`;
-  if (m > 0) return `${m}m ${s}s left`;
-  return `${s}s left`;
+  const suffix = compact ? "" : " left";
+  if (d > 0) return `${d}d ${h}h${suffix}`;
+  if (h > 0) return `${h}h ${m}m${suffix}`;
+  if (m > 0) return `${m}m ${s}s${suffix}`;
+  return `${s}s${suffix}`;
 }
 
 /**
@@ -47,10 +48,12 @@ export function Countdown({
   deal,
   className,
   style,
+  compact = false,
 }: {
   deal: Deal;
   className?: string;
   style?: React.CSSProperties;
+  compact?: boolean;
 }) {
   const end = deadlineEnd(deal);
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
@@ -72,7 +75,7 @@ export function Countdown({
       className={className}
       style={{ color: overdue ? "#DC2626" : style?.color, ...style }}
     >
-      {format(remaining)}
+      {format(remaining, compact)}
     </span>
   );
 }

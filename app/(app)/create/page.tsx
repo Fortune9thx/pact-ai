@@ -168,7 +168,14 @@ export default function CreateDealPage() {
   const validateTerms = () => {
     const e: Record<string, string> = {};
     const amt = parseFloat(amount);
-    if (isNaN(amt) || amt <= 0) e.amount = "Enter a positive GEN amount (e.g. 5 or 0.5)";
+    if (isNaN(amt) || amt <= 0) {
+      e.amount = "Enter a positive GEN amount (e.g. 5 or 0.5)";
+    } else {
+      const balance = parseFloat(wallet.balance || "0");
+      if (!isNaN(balance) && amt > balance) {
+        e.amount = `Exceeds wallet balance (${balance} GEN available)`;
+      }
+    }
     const d = parseInt(deadline);
     if (isNaN(d) || d < 1 || d > 90) e.deadline = "Deadline must be 1-90 days";
     setErrors(e);

@@ -11,6 +11,7 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatGEN, truncateAddress } from "@/lib/utils";
+import { Countdown } from "@/components/ui/Countdown";
 import {
   Shield, Zap, CheckCircle2, AlertTriangle, Clock,
   Banknote, FileText, Wallet, ArrowRight, ExternalLink,
@@ -193,7 +194,7 @@ export default function InvitePage({ params }: { params: Promise<{ id: string }>
             <div className="flex flex-col gap-1 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-3 text-center">
               <Clock className="size-4 text-[var(--color-primary)] mx-auto" />
               <p className="tabular text-sm font-bold text-[var(--color-foreground)]">
-                {deal.deadline}d
+                {deal.deadline > 0 ? <Countdown deal={deal} compact /> : "No deadline"}
               </p>
               <p className="text-[10px] text-[var(--color-muted-foreground)]">Deadline</p>
             </div>
