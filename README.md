@@ -1,6 +1,6 @@
 # Pact — AI-Powered Creative Escrow on GenLayer
 
-**Live demo → [pact-ai.vercel.app](https://pact-ai.vercel.app)**  
+**Live demo → [vibecheck-mocha-one.vercel.app](https://vibecheck-mocha-one.vercel.app)**  
 **Contract source → [`contracts/vibecheck.py`](contracts/vibecheck.py)**  
 **GitHub → [github.com/Fortune9thx/pact-ai](https://github.com/Fortune9thx/pact-ai)**
 
@@ -233,7 +233,7 @@ genlayer deploy --contract contracts/vibecheck.py
 
 ## Try it live
 
-[pact-ai.vercel.app](https://pact-ai.vercel.app) runs against the real deployed
+[vibecheck-mocha-one.vercel.app](https://vibecheck-mocha-one.vercel.app) runs against the real deployed
 contract on Bradbury (`0xBb9a90D4A4850498E22776cb713a46cc6a796aba`). Deal IDs
 are sequential and grow as people use it — check the dashboard for the current
 list rather than relying on a fixed set of pre-loaded deals.
