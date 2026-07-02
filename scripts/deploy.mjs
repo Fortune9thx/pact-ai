@@ -7,7 +7,7 @@ import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const CONTRACT_CODE = readFileSync(resolve(__dirname, "../contracts/vibecheck_simple.py"), "utf8");
+const CONTRACT_CODE = readFileSync(resolve(__dirname, "../contracts/vibecheck.py"), "utf8");
 
 const DEPLOYER_KEY = process.env.DEPLOYER_KEY;
 if (!DEPLOYER_KEY) throw new Error("DEPLOYER_KEY missing from .env");

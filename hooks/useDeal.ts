@@ -164,10 +164,15 @@ export function useCreateDeal() {
         localStorage.setItem(PENDING_DEAL_KEY, JSON.stringify({ deal: pending, at: Date.now() }));
       }
 
+      // Convert GEN → integer (whole tokens) → wei for on-chain escrow lock.
+      // The contract requires msg.value == amount_gen * 10^18 exactly.
+      const amountGEN = Math.floor(parseFloat(amount));
+      const amountWei = BigInt(amountGEN) * BigInt(10 ** 18);
       await executeWrite({
         functionName: "create_deal",
-        args: [prompt, deadline, String(parseFloat(amount))],
-        label: "Creating protected agreement",
+        args: [prompt, deadline, amountGEN],
+        value: amountWei,
+        label: "Creating protected agreement & locking GEN escrow",
       });
 
       // Return immediately after tx is submitted — don't wait for validator confirmation

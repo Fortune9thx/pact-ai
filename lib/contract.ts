@@ -39,46 +39,47 @@ export async function getAllDeals(): Promise<Deal[]> {
   }
 }
 
+// The contract intentionally exposes only get_all_deals() on-chain (GenVM caps the
+// deployable public-method count). Buyer/seller/pending filters are pure derivations
+// over the full deal list, so we compute them client-side.
+
 export async function getPendingDeals(): Promise<Deal[]> {
-  try {
-    const result = await getReadClient().readContract({
-      address: CONTRACT_ADDRESS,
-      functionName: "get_pending_deals",
-      args: [],
-    });
-    return ((result as unknown as unknown[]) ?? []).map(normalizeDeal);
-  } catch {
-    return [];
-  }
+  const all = await getAllDeals();
+  return all.filter((d) => d.status === "PENDING");
 }
 
 export async function getDealsForBuyer(address: string): Promise<Deal[]> {
-  try {
-    const result = await getReadClient().readContract({
-      address: CONTRACT_ADDRESS,
-      functionName: "get_deals_for_buyer",
-      args: [address],
-    });
-    return ((result as unknown as unknown[]) ?? []).map(normalizeDeal);
-  } catch {
-    return [];
-  }
+  const target = address.toLowerCase();
+  const all = await getAllDeals();
+  return all.filter((d) => (d.buyer ?? "").toLowerCase() === target);
 }
 
 export async function getDealsForSeller(address: string): Promise<Deal[]> {
-  try {
-    const result = await getReadClient().readContract({
-      address: CONTRACT_ADDRESS,
-      functionName: "get_deals_for_seller",
-      args: [address],
-    });
-    return ((result as unknown as unknown[]) ?? []).map(normalizeDeal);
-  } catch {
-    return [];
-  }
+  const target = address.toLowerCase();
+  const all = await getAllDeals();
+  return all.filter((d) => (d.seller ?? "").toLowerCase() === target);
 }
 
 export async function getStats(): Promise<DashboardStats> {
-  // get_stats does not exist on-chain; computed client-side from deals array
-  return { activeDeals: 0, pendingReviews: 0, escrowVolume: "0", totalDeals: 0, aiResolutionRate: 0 };
+  try {
+    const result = await getReadClient().readContract({
+      address: CONTRACT_ADDRESS,
+      functionName: "get_stats",
+      args: [],
+    }) as Record<string, unknown>;
+    const all = await getAllDeals();
+    const escrowVolume = all
+      .filter((d) => ["PENDING", "FUNDED", "SUBMITTED", "AI_REVIEWED"].includes(d.status))
+      .reduce((sum, d) => sum + parseFloat(d.amount ?? "0"), 0)
+      .toFixed(2);
+    return {
+      totalDeals:       Number(result.total_deals ?? 0),
+      activeDeals:      Number(result.active_deals ?? 0),
+      pendingReviews:   Number(result.pending_reviews ?? 0),
+      aiResolutionRate: Number(result.ai_resolution_rate ?? 0),
+      escrowVolume,
+    };
+  } catch {
+    return { activeDeals: 0, pendingReviews: 0, escrowVolume: "0", totalDeals: 0, aiResolutionRate: 0 };
+  }
 }
