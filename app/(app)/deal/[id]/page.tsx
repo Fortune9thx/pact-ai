@@ -14,6 +14,7 @@ import { ActivityTimeline } from "@/components/activity/ActivityTimeline";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Countdown } from "@/components/ui/Countdown";
 import { truncateAddress, formatGEN, statusLabel } from "@/lib/utils";
 import { getInviteUrl } from "@/lib/invite";
 import {
@@ -334,7 +335,11 @@ export default function DealDetailPage({ params }: { params: Promise<{ id: strin
                   <Clock className="size-4 text-[var(--color-primary)] shrink-0" />
                   <div>
                     <p className="text-xs text-[var(--color-muted-foreground)]">Deadline</p>
-                    <p className="text-sm font-semibold">{deal.deadline} days</p>
+                    <p className="text-sm font-semibold">
+                      {deal.deadline > 0
+                        ? <Countdown deal={deal} />
+                        : "No deadline"}
+                    </p>
                   </div>
                 </div>
               </CardContent>

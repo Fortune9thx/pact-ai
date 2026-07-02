@@ -7,6 +7,7 @@ import { useDeals } from "@/hooks/useDeal";
 import { useWallet } from "@/hooks/useWallet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Countdown } from "@/components/ui/Countdown";
 import { cn, formatGEN, statusLabel, truncateAddress } from "@/lib/utils";
 import { getInviteUrl } from "@/lib/invite";
 import type { Deal, DealStatus } from "@/lib/types";
@@ -115,9 +116,7 @@ function DealRow({
             {deal.deadline > 0 && (
               <>
                 <span style={{ color: "#D1D5DB" }}>·</span>
-                <span className="text-[10px]" style={{ color: "#9CA3AF" }}>
-                  {deal.deadline}d deadline
-                </span>
+                <Countdown deal={deal} className="text-[10px]" style={{ color: "#9CA3AF" }} />
               </>
             )}
           </div>
@@ -236,15 +235,25 @@ export default function DashboardPage() {
     [deals, myAddr]
   );
 
-  // Stats computed from real deal data
+  // Stats reflect the deals actually shown: when a wallet is connected we
+  // scope to that user's deals; otherwise we summarise every visible deal so
+  // the figures always match the "All Agreements" list instead of reading 0.
   const stats = useMemo(() => {
-    const active  = myBuyingDeals.filter(d => ["PENDING","FUNDED","SUBMITTED","AI_REVIEWED"].includes(d.status)).length
-                  + mySellingDeals.filter(d => ["FUNDED","SUBMITTED"].includes(d.status)).length;
-    const pending = myBuyingDeals.filter(d => d.status === "PENDING").length;
-    const done    = myBuyingDeals.filter(d => ["RESOLVED_PASS","RESOLVED_FAIL","CANCELLED"].includes(d.status)).length;
-    const volume  = myBuyingDeals.reduce((s, d) => s + (parseFloat(String(d.amount)) || 0), 0);
+    if (wallet.isConnected) {
+      const active  = myBuyingDeals.filter(d => ["PENDING","FUNDED","SUBMITTED","AI_REVIEWED"].includes(d.status)).length
+                    + mySellingDeals.filter(d => ["FUNDED","SUBMITTED"].includes(d.status)).length;
+      const pending = myBuyingDeals.filter(d => d.status === "PENDING").length;
+      const done    = myBuyingDeals.filter(d => ["RESOLVED_PASS","RESOLVED_FAIL","CANCELLED"].includes(d.status)).length;
+      const volume  = myBuyingDeals.reduce((s, d) => s + (parseFloat(String(d.amount)) || 0), 0);
+      return { active, pending, done, volume };
+    }
+    // Not connected — summarise all deals in view.
+    const active  = deals.filter(d => ["PENDING","FUNDED","SUBMITTED","AI_REVIEWED"].includes(d.status)).length;
+    const pending = deals.filter(d => d.status === "PENDING").length;
+    const done    = deals.filter(d => ["RESOLVED_PASS","RESOLVED_FAIL","CANCELLED"].includes(d.status)).length;
+    const volume  = deals.reduce((s, d) => s + (parseFloat(String(d.amount)) || 0), 0);
     return { active, pending, done, volume };
-  }, [myBuyingDeals, mySellingDeals]);
+  }, [wallet.isConnected, deals, myBuyingDeals, mySellingDeals]);
 
   // Active + pending grouped by recency (latest id last in array = highest id)
   const myActiveDeals = useMemo(() => [
