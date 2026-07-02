@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       to: address as `0x${string}`,
       value: FAUCET_AMOUNT,
       gasPrice,
-      gas: 21000n,
+      gas: BigInt(21000),
       type: "legacy",
     });
 

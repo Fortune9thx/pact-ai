@@ -204,7 +204,7 @@ export function useApproveWork() {
   const { executeWrite } = useWallet();
   return useCallback(
     async (dealId: string) =>
-      executeWrite({ functionName: "approve_work", args: [dealId], label: "Approving work & releasing payment" }),
+      executeWrite({ functionName: "approve_work", args: [dealId], label: "Approving work — GEN releases once the network finalizes (a few minutes)" }),
     [executeWrite]
   );
 }
@@ -222,7 +222,7 @@ export function useReleaseAfterAI() {
   const { executeWrite } = useWallet();
   return useCallback(
     async (dealId: string) =>
-      executeWrite({ functionName: "release_after_ai", args: [dealId], label: "Accepting AI recommendation" }),
+      executeWrite({ functionName: "release_after_ai", args: [dealId], label: "Accepting AI recommendation — GEN releases once the network finalizes (a few minutes)" }),
     [executeWrite]
   );
 }
@@ -231,7 +231,13 @@ export function useOverrideAI() {
   const { executeWrite } = useWallet();
   return useCallback(
     async (dealId: string, release: boolean) =>
-      executeWrite({ functionName: "override_ai", args: [dealId, release], label: release ? "Releasing payment (overriding AI)" : "Requesting refund (overriding AI)" }),
+      executeWrite({
+        functionName: "override_ai",
+        args: [dealId, release],
+        label: release
+          ? "Releasing payment (overriding AI) — finalizes on-chain in a few minutes"
+          : "Requesting refund (overriding AI) — finalizes on-chain in a few minutes",
+      }),
     [executeWrite]
   );
 }
@@ -240,7 +246,7 @@ export function useCancelDeal() {
   const { executeWrite } = useWallet();
   return useCallback(
     async (dealId: string) =>
-      executeWrite({ functionName: "cancel_deal", args: [dealId], label: "Cancelling deal & refunding escrow" }),
+      executeWrite({ functionName: "cancel_deal", args: [dealId], label: "Cancelling deal — refund finalizes on-chain in a few minutes" }),
     [executeWrite]
   );
 }
