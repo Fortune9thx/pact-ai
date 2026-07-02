@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -12,6 +12,7 @@ import {
   Activity, Lock, GitBranch, Cpu, TrendingUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CONTRACT_ADDRESS } from "@/lib/genlayer";
 import type { ReactNode } from "react";
 
 /* ── Brand tokens ────────────────────────────────────────────────── */
@@ -98,14 +99,18 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
   );
 }
 
-/* ── Live Terminal Widget (right column) ─────────────────────────── */
+/* ── Illustrative Terminal Widget (right column) ────────────────────
+   NOTE: this is a static, illustrative mockup of what deal activity looks
+   like — it is NOT a live feed of on-chain events. Labeled "Preview" (not
+   "Live") and the network stats below show the real deployed contract
+   address so this can't be mistaken for fabricated on-chain proof. ── */
 const FEED_ITEMS = [
-  { id: "d_0041", action: "Deal funded",      amount: "120 GEN", ago: "2m ago",  status: "funded"   },
-  { id: "d_0040", action: "AI verdict: PASS", amount: "250 GEN", ago: "11m ago", status: "pass"     },
-  { id: "d_0039", action: "Work submitted",   amount: "95 GEN",  ago: "34m ago", status: "submit"   },
-  { id: "d_0038", action: "Deal funded",      amount: "180 GEN", ago: "1h ago",  status: "funded"   },
-  { id: "d_0037", action: "AI verdict: PASS", amount: "75 GEN",  ago: "2h ago",  status: "pass"     },
-  { id: "d_0036", action: "Payment released", amount: "300 GEN", ago: "3h ago",  status: "released" },
+  { id: "d_0041", action: "Deal funded",      amount: "120 GEN", ago: "example", status: "funded"   },
+  { id: "d_0040", action: "AI verdict: PASS", amount: "250 GEN", ago: "example", status: "pass"     },
+  { id: "d_0039", action: "Work submitted",   amount: "95 GEN",  ago: "example", status: "submit"   },
+  { id: "d_0038", action: "Deal funded",      amount: "180 GEN", ago: "example", status: "funded"   },
+  { id: "d_0037", action: "AI verdict: PASS", amount: "75 GEN",  ago: "example", status: "pass"     },
+  { id: "d_0036", action: "Payment released", amount: "300 GEN", ago: "example", status: "released" },
 ];
 
 const STATUS_DOT: Record<string, string> = {
@@ -116,19 +121,15 @@ const STATUS_DOT: Record<string, string> = {
 };
 
 function LiveTerminal() {
-  const [tick, setTick] = useState(0);
-
-  // Fake "live" ticker — increments every 4 s to simulate new events
-  useEffect(() => {
-    const t = setInterval(() => setTick(n => (n + 1) % 3), 4000);
-    return () => clearInterval(t);
-  }, []);
+  const shortAddress = CONTRACT_ADDRESS
+    ? `${CONTRACT_ADDRESS.slice(0, 6)}…${CONTRACT_ADDRESS.slice(-4)}`
+    : "not deployed";
 
   const STATS = [
     { label: "Network",    value: "Bradbury" },
     { label: "Chain ID",   value: "4221" },
-    { label: "Validators", value: `${5 + tick}` },
-    { label: "Contract",   value: "0x5D97…6098" },
+    { label: "Validators", value: "5" },
+    { label: "Contract",   value: shortAddress },
   ];
 
   return (
@@ -143,12 +144,8 @@ function LiveTerminal() {
           <span className="text-xs font-bold tracking-tight" style={{ color: DEEP }}>Contract Activity</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="relative flex size-1.5">
-            <span className="absolute inline-flex size-full rounded-full opacity-60"
-              style={{ background: "#22c55e", animation: "pulse-dot 1.8s cubic-bezier(0.4,0,0.6,1) infinite" }} />
-            <span className="relative inline-flex size-1.5 rounded-full" style={{ background: "#22c55e" }} />
-          </span>
-          <span className="text-[10px] font-medium" style={{ color: "#22c55e" }}>Live</span>
+          <span className="relative inline-flex size-1.5 rounded-full" style={{ background: "#AAAACC" }} />
+          <span className="text-[10px] font-medium" style={{ color: "#AAAACC" }}>Preview</span>
         </div>
       </div>
 

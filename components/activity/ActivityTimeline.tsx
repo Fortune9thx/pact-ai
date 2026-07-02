@@ -79,7 +79,7 @@ function buildTimeline(deal: Deal): TimelineEvent[] {
   if (deal.status === "RESOLVED_PASS" && !deal.aiVerdict) {
     events.push({
       label: "Work Approved",
-      description: "Buyer approved the work. Escrow released to seller",
+      description: "Buyer approved the work. Escrow release to seller is finalizing on-chain",
       icon: ThumbsUp,
       color: "text-[var(--color-verdict-pass)]",
       timestamp: base + 7200,
@@ -87,13 +87,16 @@ function buildTimeline(deal: Deal): TimelineEvent[] {
   }
 
   // 7. Final resolution
+  // Note: emit_transfer settles at network finalization, not instantly on approval —
+  // this can take several minutes on Bradbury, so we describe it as releasing/returning
+  // rather than claiming the transfer has already completed.
   if (["RESOLVED_PASS", "RESOLVED_FAIL"].includes(deal.status)) {
     const pass = deal.status === "RESOLVED_PASS";
     events.push({
-      label: pass ? "Payment Released" : "Buyer Refunded",
+      label: pass ? "Payment Approved" : "Refund Approved",
       description: pass
-        ? "Escrow transferred to seller. Agreement complete"
-        : "Escrow returned to buyer. Agreement closed",
+        ? "Escrow releasing to seller — finalizes on-chain in a few minutes"
+        : "Escrow returning to buyer — finalizes on-chain in a few minutes",
       icon: pass ? CheckCircle2 : XCircle,
       color: pass ? "text-[var(--color-verdict-pass)]" : "text-[var(--color-verdict-fail)]",
       timestamp: base + 7500,

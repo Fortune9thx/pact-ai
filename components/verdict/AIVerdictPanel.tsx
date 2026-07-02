@@ -113,10 +113,12 @@ function ResolvedHeader({ status }: { status: string }) {
           "text-base font-bold",
           pass ? "text-[var(--color-verdict-pass)]" : "text-[var(--color-verdict-fail)]"
         )}>
-          {pass ? "Payment Released" : "Payment Refunded"}
+          {pass ? "Payment Approved" : "Refund Approved"}
         </h3>
         <p className="text-xs text-[var(--color-muted-foreground)] mt-0.5">
-          {pass ? "Escrow has been released to the seller." : "Escrow has been refunded to the buyer."}
+          {/* emit_transfer settles at network finalization, not instantly on approval —
+              this can take several minutes on Bradbury, so we don't claim it's arrived yet. */}
+          {pass ? "Releasing escrow to the seller — finalizes on-chain in a few minutes." : "Releasing refund to the buyer — finalizes on-chain in a few minutes."}
         </p>
       </div>
     </div>

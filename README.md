@@ -30,30 +30,70 @@ Traditional smart contracts can't help here. Evaluating whether a logo "captures
 
 GenLayer's `gl.nondet.exec_prompt()` lets the contract call an LLM inside a decentralized validator network. Multiple validators independently run the same prompt and reach consensus via the **Equivalence Principle** — they don't need identical outputs, just equivalent conclusions. This makes subjective quality evaluation trustless and tamper-resistant.
 
-Pact's contract uses this for `request_ai_review`:
+Pact's contract uses this for `request_ai_review`. The schema is deliberately
+constrained to a **binary `PASS`/`FAIL` enum** — early iterations let the
+validators return free-form JSON, which caused validators to disagree on
+exact wording/formatting even when they agreed on the underlying verdict.
+Constraining `result` to two fixed tokens forces the Equivalence Principle to
+compare on outcome, not phrasing:
 
 ```python
 @gl.public.write
 def request_ai_review(self, deal_id: str) -> None:
     deal = self._get_deal(deal_id)
-    
-    prompt = f"""You are evaluating a creative work submission...
-    
-    ORIGINAL BRIEF: {deal['prompt']}
-    SUBMISSION URL: {deal['submission']}
-    SELLER'S DESCRIPTION: {deal['submission_description']}
-    
-    Return JSON: {{ "result": "PASS" or "FAIL", "confidence": 0-100,
-    "reasoning": "...", "style_match": 0-100,
-    "prompt_alignment": 0-100, "quality_match": 0-100 }}"""
-    
-    raw = gl.nondet.exec_prompt(prompt, response_format="json")
-    verdict = json.loads(raw if isinstance(raw, str) else raw.text)
-    deal['ai_verdict'] = verdict
-    deal['status'] = 'AI_REVIEWED'
+    ai_prompt = (
+        "You are Pact AI Review. Evaluate this creative submission objectively.\n\n"
+        "CREATIVE BRIEF:\n" + deal["prompt"] + "\n\n"
+        "SUBMISSION URL: " + deal["submission"] + "\n"
+        "SELLER DESCRIPTION: " + deal["submission_description"] + "\n\n"
+        "PASS if it satisfies the brief. FAIL otherwise.\n\n"
+        'Return ONLY valid JSON: {"result": "PASS" or "FAIL", "confidence": 0-100, "reasoning": "..."}'
+    )
+    verdict = yield gl.exec_prompt_call(
+        ai_prompt,
+        schema={
+            "type": "object",
+            "properties": {
+                "result":     {"type": "string", "enum": ["PASS", "FAIL"]},
+                "confidence": {"type": "integer", "minimum": 0, "maximum": 100},
+                "reasoning":  {"type": "string"},
+            },
+            "required": ["result", "confidence", "reasoning"],
+        },
+    )
+    deal["ai_verdict"] = verdict
+    deal["status"] = "AI_REVIEWED"
 ```
 
-The verdict is advisory. The buyer then calls `release_after_ai` to accept it or `override_ai` to overrule it — preserving human final authority.
+The verdict is advisory. The buyer then calls `release_after_ai` to accept it or `override_ai` to overrule it — preserving human final authority. The buyer can also skip AI entirely and call `approve_work` for direct approval.
+
+---
+
+## Current status (verified on-chain)
+
+This project went through a review round that flagged two issues. Both are now fixed and independently verified on-chain — see below for exactly what was tested and how.
+
+### 1. Escrow was state-only → now real GEN token transfers
+
+Previously, `create_deal` only recorded an escrow amount in contract storage without actually moving funds — the "locked" GEN was fictional. This is fixed:
+
+- `create_deal` is `@gl.public.write.payable` and asserts `gl.message.value == expected_wei` — the buyer must send real GEN with the transaction, or it reverts.
+- Every resolution path (`approve_work`, `release_after_ai`, `override_ai`, `cancel_deal`) calls `_Wallet(Address(recipient)).emit_transfer(value=...)` — a real EVM-level value transfer, not a storage flag.
+- **Verified on Bradbury**: contract balance increased by exactly 1 GEN on `create_deal`, and the `approve_work` transaction was independently confirmed by inspecting its raw transaction data — it queued an `emit_transfer` message for exactly 1 GEN to the seller's address, with all 5 validators voting `AGREE` and `txExecutionResultName: "FINISHED_WITH_RETURN"`.
+
+**Important nuance:** `emit_transfer` messages execute at transaction **FINALIZED**, not **ACCEPTED**. GenLayer's finality window exists so an accepted result can still be appealed and overturned — releasing funds before that window closes would make an appeal unable to claw back a wrongly-sent transfer. On Bradbury this finality window has been observed to take **10–60+ minutes**. The frontend reflects this: after an approval action, the UI shows "finalizes on-chain in a few minutes" rather than claiming the payout has already arrived, because it hasn't yet.
+
+### 2. Consensus fragility → binary enum schema
+
+Previously, `request_ai_review` asked the LLM to return open-ended JSON with 6 free-form fields. Validators running the same prompt could reach the same *judgment* but phrase it slightly differently, breaking the Equivalence Principle and causing spurious `DISAGREE` votes. Fixed by constraining `result` to a two-value enum (`PASS`/`FAIL`) as shown above.
+
+**Verified on GenLayer Studionet**: 5/5 validators returned unanimous agreement, transaction reached `FINALIZED`.
+
+### Known limitation: `request_ai_review` on Bradbury specifically
+
+The binary-schema fix is correct and proven (see above), but as of this writing, calling `request_ai_review` on **Testnet Bradbury** reliably fails — not because the schema is wrong, but because of a runtime issue independent of this contract: the leader validator executes `gl.exec_prompt_call` successfully, but the other validators in the round get a *different* execution hash from each other's own vote (unanimous among themselves, but diverging from the leader), producing a `DISAGREE` result. This has been reproduced consistently and traced to Bradbury's currently-pinned GenVM runtime — every attempted `request_ai_review` transaction on the live Bradbury contract has hit this, none have completed.
+
+Until Bradbury's pinned runtime is updated, use `approve_work` for direct buyer approval (bypasses AI, releases escrow immediately via the same real `emit_transfer` path) to exercise the full escrow lifecycle end-to-end. The AI consensus mechanism itself is proven correct on Studionet; this is a network/runtime issue, not a contract defect.
 
 ---
 
@@ -159,7 +199,7 @@ npm install
 npm run dev
 ```
 
-The app runs in **demo mode** by default (`NEXT_PUBLIC_DEMO_MODE=true`) — all contract interactions are simulated in-browser using localStorage. No wallet required.
+The app can run in **demo mode** (`NEXT_PUBLIC_DEMO_MODE=true`) — all contract interactions are simulated in-browser using localStorage, no wallet required. The live deployment runs against the real Bradbury contract (`NEXT_PUBLIC_DEMO_MODE=false`) instead — see [Current status](#current-status-verified-on-chain) above for what's been verified on that deployment.
 
 ### Connect to live GenLayer contract
 
@@ -190,19 +230,20 @@ genlayer deploy --contract contracts/vibecheck.py
 
 ---
 
-## Demo flows
+## Try it live
 
-The live demo at [pact-ai.vercel.app](https://pact-ai.vercel.app) is pre-loaded with 5 deals across all lifecycle states:
+[pact-ai.vercel.app](https://pact-ai.vercel.app) runs against the real deployed
+contract on Bradbury (`0xF099bDabD5dD15f9cde9532c276Dc2De1602595f`). Deal IDs
+are sequential and grow as people use it — check the dashboard for the current
+list rather than relying on a fixed set of pre-loaded deals.
 
-| Deal | State | What to try |
-|------|-------|-------------|
-| `deal_000001` | PENDING | Visit `/invite/deal_000001`, switch to Seller, claim the deal |
-| `deal_000002` | FUNDED | Switch to Seller, submit work |
-| `deal_000003` | SUBMITTED | As Buyer, approve directly or request AI review |
-| `deal_000004` | AI_REVIEWED | See the AI verdict panel, accept or override |
-| `deal_000005` | RESOLVED_PASS | View completed deal history |
+**Recommended path to see the full lifecycle** (given the [known Bradbury AI
+limitation](#known-limitation-request_ai_review-on-bradbury-specifically) above):
 
-**Create a new deal** — click "New Agreement", write a brief, set amount and deadline, copy the invite link.
+1. Click "New Agreement" — write a brief, set a GEN amount, get an invite link. This locks real GEN in escrow (`create_deal` is payable).
+2. Open the invite link as the seller, claim the deal, submit work.
+3. As buyer, click **"Approve & Release Payment"** (not "Request AI Review" — that path currently fails on Bradbury; see above). The deal resolves to `RESOLVED_PASS` immediately, and the GEN transfer finalizes on-chain within a few to several minutes afterward.
+4. To see the AI verdict UI itself (schema, confidence score, reasoning) without depending on Bradbury's runtime, deploy the same contract to **Studionet** — `request_ai_review` completes there in under a minute with unanimous validator agreement.
 
 ---
 

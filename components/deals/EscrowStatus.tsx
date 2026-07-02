@@ -9,23 +9,6 @@ interface EscrowStatusProps {
   className?: string;
 }
 
-const steps: Array<{ status: Deal["status"]; label: string }> = [
-  { status: "FUNDED",        label: "Funded"      },
-  { status: "SUBMITTED",     label: "Submitted"   },
-  { status: "AI_REVIEWED",   label: "AI Review"   },
-  { status: "RESOLVED_PASS", label: "Resolved"    },
-];
-
-const statusOrder: Record<string, number> = {
-  PENDING:       0,
-  FUNDED:        0,
-  SUBMITTED:     1,
-  AI_REVIEWED:   2,
-  RESOLVED_PASS: 3,
-  RESOLVED_FAIL: 3,
-  CANCELLED:     0,
-};
-
 function EscrowIcon({ status }: { status: Deal["status"] }) {
   if (status === "RESOLVED_PASS") return <CheckCircle2 className="size-5 text-[var(--color-verdict-pass)]" />;
   if (status === "RESOLVED_FAIL") return <XCircle className="size-5 text-[var(--color-verdict-fail)]" />;
@@ -35,8 +18,24 @@ function EscrowIcon({ status }: { status: Deal["status"] }) {
 }
 
 export function EscrowStatus({ deal, className }: EscrowStatusProps) {
-  const currentStep = statusOrder[deal.status] ?? 0;
   const isResolved = deal.status === "RESOLVED_PASS" || deal.status === "RESOLVED_FAIL" || deal.status === "CANCELLED";
+
+  // A deal resolves either via AI review (SUBMITTED -> AI_REVIEWED -> RESOLVED_*)
+  // or via direct buyer approval (SUBMITTED -> RESOLVED_PASS, skipping AI entirely).
+  // Only include the "AI Review" step if AI review actually ran for this deal —
+  // otherwise it falsely implies the AI evaluated a submission it never saw.
+  const wentThroughAI = deal.status === "AI_REVIEWED" || deal.aiVerdict != null;
+  const steps: Array<{ status: Deal["status"]; label: string }> = [
+    { status: "FUNDED",    label: "Funded"    },
+    { status: "SUBMITTED", label: "Submitted" },
+    ...(wentThroughAI ? [{ status: "AI_REVIEWED" as const, label: "AI Review" }] : []),
+    { status: "RESOLVED_PASS", label: "Resolved" },
+  ];
+
+  const currentStep = steps.findIndex(s =>
+    s.status === deal.status || (deal.status === "RESOLVED_FAIL" && s.status === "RESOLVED_PASS")
+  );
+  const resolvedIndex = steps.length - 1;
 
   return (
     <div className={cn("rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5", className)}>
@@ -60,8 +59,11 @@ export function EscrowStatus({ deal, className }: EscrowStatusProps) {
               deal.status === "RESOLVED_FAIL" && "text-[var(--color-verdict-fail)]",
               deal.status === "CANCELLED" && "text-[var(--color-muted-foreground)]"
             )}>
-              {deal.status === "RESOLVED_PASS" ? "Released to seller" :
-               deal.status === "RESOLVED_FAIL" ? "Refunded to buyer" :
+              {/* emit_transfer only settles at network finalization (can take
+                  several minutes on Bradbury) — "approved/rejected" describes
+                  what's confirmed now, not an instant fund arrival claim. */}
+              {deal.status === "RESOLVED_PASS" ? "Approved — payout releasing" :
+               deal.status === "RESOLVED_FAIL" ? "Rejected — refund releasing" :
                "Cancelled"}
             </span>
           ) : (
@@ -83,8 +85,8 @@ export function EscrowStatus({ deal, className }: EscrowStatusProps) {
           <div className="relative flex justify-between">
             {steps.map((step, i) => {
               const done = i < currentStep;
-              const active = i === currentStep || (step.status === "RESOLVED_PASS" && deal.status === "RESOLVED_FAIL");
-              const isFailStep = i === steps.length - 1 && deal.status === "RESOLVED_FAIL";
+              const active = i === currentStep;
+              const isFailStep = i === resolvedIndex && deal.status === "RESOLVED_FAIL";
 
               return (
                 <div key={step.status} className="flex flex-col items-center gap-1.5">
@@ -108,7 +110,7 @@ export function EscrowStatus({ deal, className }: EscrowStatusProps) {
                       ? "text-[var(--color-foreground)]"
                       : "text-[var(--color-muted-foreground)]"
                   )}>
-                    {isFailStep && deal.status === "RESOLVED_FAIL" ? "Rejected" : step.label}
+                    {isFailStep ? "Rejected" : step.label}
                   </span>
                 </div>
               );
