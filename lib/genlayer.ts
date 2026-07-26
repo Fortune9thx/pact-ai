@@ -1,4 +1,5 @@
-import { createClient, createAccount, chains } from "genlayer-js";
+import { createClient, chains } from "genlayer-js";
+import type { Address } from "viem";
 
 const activeChain =
   process.env.NEXT_PUBLIC_NETWORK === "bradbury"
@@ -7,7 +8,10 @@ const activeChain =
 
 export const BRADBURY_RPC_DIRECT = "https://rpc-bradbury.genlayer.com";
 
-export type LocalAccount = ReturnType<typeof createAccount>;
+/** Minimal EIP-1193 provider shape (MetaMask / injected wallets). */
+export interface Eip1193Provider {
+  request(args: { method: string; params?: unknown[] | object }): Promise<unknown>;
+}
 
 export function getProxyRpcUrl(): string {
   if (typeof window !== "undefined") {
@@ -17,18 +21,27 @@ export function getProxyRpcUrl(): string {
   return `${appUrl}/api/rpc`;
 }
 
-// LocalAccount path: genlayer-js uses its own HTTP fetch with Date.now() integer IDs.
-// This bypasses the wallet's RPC transport, avoiding Bradbury's rejection of UUID string IDs.
-export function createGenLayerClient(account: LocalAccount) {
+/**
+ * Write client bound to the user's injected wallet (MetaMask).
+ *
+ * The user's real EOA (`address`) is the on-chain sender, and `provider` is the
+ * EIP-1193 provider from their wallet. genlayer-js routes only wallet methods
+ * (eth_sendTransaction, personal_sign, eth_requestAccounts) through the
+ * provider — so MetaMask shows a confirmation popup for every write and the
+ * user's *visible* GEN balance funds the payable escrow. All other RPC traffic
+ * still goes through genlayer-js's own transport against `endpoint`, so the
+ * wallet's RPC id format never reaches Bradbury.
+ */
+export function createWriteClient(address: Address, provider: Eip1193Provider) {
   return createClient({
     chain: activeChain,
     endpoint: getProxyRpcUrl(),
-    account,
+    account: address,
+    provider,
   } as Parameters<typeof createClient>[0]);
 }
 
-export { createAccount };
-
+/** Read client — view calls only, no account/signing, so no wallet prompts. */
 export function getReadClient() {
   return createClient({
     chain: activeChain,

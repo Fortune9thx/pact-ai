@@ -47,11 +47,13 @@ class VibeCheck(gl.Contract):
 
     @gl.public.view
     def get_deals_for_buyer(self, buyer: str) -> list:
-        return [d for d in self._load().values() if d.get("buyer") == buyer]
+        b = buyer.lower()
+        return [d for d in self._load().values() if d.get("buyer") == b]
 
     @gl.public.view
     def get_deals_for_seller(self, seller: str) -> list:
-        return [d for d in self._load().values() if d.get("seller") == seller]
+        s = seller.lower()
+        return [d for d in self._load().values() if d.get("seller") == s]
 
     @gl.public.view
     def get_pending_deals(self) -> list:
@@ -73,7 +75,7 @@ class VibeCheck(gl.Contract):
 
     @gl.public.write.payable
     def create_deal(self, prompt: str, deadline_days: int, amount_gen: str) -> str:
-        buyer = gl.message.sender_address.as_hex
+        buyer = gl.message.sender_address.as_hex.lower()
         amount_float = float(amount_gen)
         assert amount_float > 0, "Amount must be positive"
         expected_wei = u256(int(amount_float * (10 ** 18)))
@@ -103,7 +105,7 @@ class VibeCheck(gl.Contract):
         deals = self._load()
         assert deal_id in deals, "Deal not found"
         deal = deals[deal_id]
-        assert gl.message.sender_address.as_hex == deal["buyer"], "Only buyer"
+        assert gl.message.sender_address.as_hex.lower() == deal["buyer"], "Only buyer"
         assert deal["status"] in [STATUS_PENDING, STATUS_FUNDED], "Cannot cancel now"
         deal["status"] = STATUS_CANCELLED
         deals[deal_id] = deal
@@ -115,7 +117,7 @@ class VibeCheck(gl.Contract):
         deals = self._load()
         assert deal_id in deals, "Deal not found"
         deal = deals[deal_id]
-        assert gl.message.sender_address.as_hex == deal["buyer"], "Only buyer"
+        assert gl.message.sender_address.as_hex.lower() == deal["buyer"], "Only buyer"
         assert deal["status"] == STATUS_SUBMITTED, "Must submit work first"
         assert deal["submission"] != "", "No submission to review"
 
@@ -159,7 +161,7 @@ class VibeCheck(gl.Contract):
         deals = self._load()
         assert deal_id in deals, "Deal not found"
         deal = deals[deal_id]
-        sender = gl.message.sender_address.as_hex
+        sender = gl.message.sender_address.as_hex.lower()
         assert deal["status"] == STATUS_PENDING, "Deal not open"
         assert deal["seller"] == "", "Already claimed"
         assert sender != deal["buyer"], "Cannot claim own deal"
@@ -173,7 +175,7 @@ class VibeCheck(gl.Contract):
         deals = self._load()
         assert deal_id in deals, "Deal not found"
         deal = deals[deal_id]
-        assert gl.message.sender_address.as_hex == deal["buyer"], "Only buyer"
+        assert gl.message.sender_address.as_hex.lower() == deal["buyer"], "Only buyer"
         assert deal["status"] == STATUS_AI_REVIEWED, "AI review required"
         verdict = deal.get("ai_verdict") or {}
         is_pass = str(verdict.get("result", "FAIL")).upper() == "PASS"
@@ -190,7 +192,7 @@ class VibeCheck(gl.Contract):
         deals = self._load()
         assert deal_id in deals, "Deal not found"
         deal = deals[deal_id]
-        assert gl.message.sender_address.as_hex == deal["buyer"], "Only buyer"
+        assert gl.message.sender_address.as_hex.lower() == deal["buyer"], "Only buyer"
         assert deal["status"] == STATUS_AI_REVIEWED, "AI review required"
         deal["status"] = STATUS_RESOLVED_PASS if release else STATUS_RESOLVED_FAIL
         deals[deal_id] = deal
@@ -205,7 +207,7 @@ class VibeCheck(gl.Contract):
         deals = self._load()
         assert deal_id in deals, "Deal not found"
         deal = deals[deal_id]
-        assert gl.message.sender_address.as_hex == deal["seller"], "Only seller"
+        assert gl.message.sender_address.as_hex.lower() == deal["seller"], "Only seller"
         assert deal["status"] == STATUS_FUNDED, "Deal must be active"
         assert len(submission_url.strip()) > 0, "Submission URL required"
         assert len(description.strip()) >= 10, "Description too short"
@@ -220,7 +222,7 @@ class VibeCheck(gl.Contract):
         deals = self._load()
         assert deal_id in deals, "Deal not found"
         deal = deals[deal_id]
-        assert gl.message.sender_address.as_hex == deal["buyer"], "Only buyer"
+        assert gl.message.sender_address.as_hex.lower() == deal["buyer"], "Only buyer"
         assert deal["status"] == STATUS_SUBMITTED, "Must submit work first"
         deal["status"] = STATUS_RESOLVED_PASS
         deals[deal_id] = deal

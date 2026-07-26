@@ -1,18 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
-import { keccak256 } from "viem";
-import { useAccount, useDisconnect, useSignMessage } from "wagmi";
-import { createGenLayerClient, createAccount, CONTRACT_ADDRESS, type LocalAccount } from "@/lib/genlayer";
+import { useCallback, useEffect } from "react";
+import { useAccount, useDisconnect } from "wagmi";
+import { createWriteClient, CONTRACT_ADDRESS, type Eip1193Provider } from "@/lib/genlayer";
 import { useStore } from "@/store/useStore";
 import type { Transaction } from "@/lib/types";
-
-const SIGN_MSG =
-  "Pact Protocol: Authorize GenLayer testnet signing\n\nThis generates a signing key for on-chain transactions.\nNo funds are transferred by signing this message.";
-
-function getSessionKey(): `0x${string}` | null {
-  try { return localStorage.getItem("pact_session_key") as `0x${string}` | null; } catch { return null; }
-}
 
 async function fetchBalance(address: string): Promise<string> {
   try {
@@ -26,114 +18,61 @@ async function fetchBalance(address: string): Promise<string> {
   } catch { return "0.0000"; }
 }
 
-async function requestFaucet(address: string): Promise<void> {
-  try {
-    await fetch("/api/faucet", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address }),
-    });
-  } catch { /* non-fatal */ }
-}
-
 export function useWallet() {
   const { wallet, setWallet, disconnectWallet, setTransaction, clearTransaction } = useStore();
-  const { address: wagmiAddress, isConnected: wagmiConnected } = useAccount();
+  const { address: wagmiAddress, isConnected: wagmiConnected, connector } = useAccount();
   const { disconnect: wagmiDisconnect } = useDisconnect();
-  const { signMessageAsync } = useSignMessage();
-  const derivingRef = useRef(false);
 
-  // When wagmi connects, derive the GenLayer signing key
+  // When MetaMask connects, the user's real EOA *is* the on-chain identity.
+  // No key derivation, no session key, no invisible auto-fauceted account:
+  // every transaction is signed by MetaMask against this visible address.
   useEffect(() => {
-    if (!wagmiConnected || !wagmiAddress || derivingRef.current) return;
-    const sessionKey = getSessionKey();
-    const storedWallet = localStorage.getItem("pact_wallet_address");
-
-    if (sessionKey && storedWallet?.toLowerCase() === wagmiAddress.toLowerCase()) {
-      // Restore from existing session
-      const account = createAccount(sessionKey);
-      fetchBalance(account.address).then((bal) => {
-        setWallet({
-          address: account.address,
-          walletAddress: wagmiAddress,
-          isConnected: true,
-          balance: bal,
-          chainName: "GenLayer Bradbury",
-        });
+    if (!wagmiConnected || !wagmiAddress) return;
+    let cancelled = false;
+    fetchBalance(wagmiAddress).then((bal) => {
+      if (cancelled) return;
+      setWallet({
+        address: wagmiAddress,
+        walletAddress: wagmiAddress,
+        isConnected: true,
+        balance: bal,
+        chainName: "GenLayer Bradbury",
       });
-      return;
-    }
+    });
+    return () => { cancelled = true; };
+  }, [wagmiConnected, wagmiAddress, setWallet]);
 
-    // New connection — derive key via personal_sign
-    derivingRef.current = true;
-    (async () => {
-      try {
-        const sig = await signMessageAsync({ message: SIGN_MSG });
-        const derivedKey = keccak256(sig as `0x${string}`);
-        const account = createAccount(derivedKey);
-
-        localStorage.setItem("pact_session_key", derivedKey);
-        localStorage.setItem("pact_wallet_address", wagmiAddress);
-
-        const bal = await fetchBalance(account.address);
-        setWallet({
-          address: account.address,
-          walletAddress: wagmiAddress,
-          isConnected: true,
-          balance: bal,
-          chainName: "GenLayer Bradbury",
-        });
-
-        const balWei = BigInt(Math.round(parseFloat(bal) * 1e18));
-        if (balWei < BigInt("50000000000000000")) {
-          requestFaucet(account.address).then(async () => {
-            await new Promise((r) => setTimeout(r, 6000));
-            const newBal = await fetchBalance(account.address);
-            setWallet({ balance: newBal });
-          });
-        }
-      } catch (err) {
-        console.error("Key derivation failed:", err);
-        wagmiDisconnect();
-      } finally {
-        derivingRef.current = false;
-      }
-    })();
-  }, [wagmiConnected, wagmiAddress, signMessageAsync, setWallet, wagmiDisconnect]);
-
-  // When wagmi disconnects, clear our state too
+  // Mirror wagmi disconnect into our store.
   useEffect(() => {
-    if (!wagmiConnected && wallet.isConnected) {
-      disconnectWallet();
-      try {
-        localStorage.removeItem("pact_session_key");
-        localStorage.removeItem("pact_wallet_address");
-      } catch { /* ignore */ }
-    }
+    if (!wagmiConnected && wallet.isConnected) disconnectWallet();
   }, [wagmiConnected, wallet.isConnected, disconnectWallet]);
 
   const disconnect = useCallback(() => {
     wagmiDisconnect();
     disconnectWallet();
-    try {
-      localStorage.removeItem("pact_session_key");
-      localStorage.removeItem("pact_wallet_address");
-    } catch { /* ignore */ }
   }, [wagmiDisconnect, disconnectWallet]);
+
+  const refreshBalance = useCallback(async () => {
+    if (!wagmiAddress) return;
+    const bal = await fetchBalance(wagmiAddress);
+    setWallet({ balance: bal });
+  }, [wagmiAddress, setWallet]);
 
   const executeWrite = useCallback(
     async ({ functionName, args, value, label }: {
       functionName: string; args: unknown[]; value?: bigint; label: string;
     }): Promise<string> => {
-      const sessionKey = getSessionKey();
-      if (!sessionKey || !wallet.address) throw new Error("Wallet not connected");
+      if (!wagmiAddress || !connector) throw new Error("Wallet not connected");
 
-      const account = createAccount(sessionKey);
+      // EIP-1193 provider from the active wallet connector — this is what
+      // surfaces the MetaMask signature popup for each transaction.
+      const provider = (await connector.getProvider()) as Eip1193Provider;
+
       const tx: Transaction = { hash: "", step: "signing", label };
       setTransaction(tx);
 
       try {
-        const client = createGenLayerClient(account);
+        const client = createWriteClient(wagmiAddress, provider);
         setTransaction({ ...tx, step: "broadcasting" });
 
         const hash = await client.writeContract({
@@ -145,6 +84,8 @@ export function useWallet() {
 
         setTransaction({ hash: hash as string, step: "confirmed", label });
         setTimeout(clearTransaction, 4000);
+        // Escrow debits the user's real balance — refresh it after a write.
+        void refreshBalance();
         return hash as string;
       } catch (err) {
         const error = err instanceof Error ? err.message : "Transaction failed";
@@ -152,8 +93,8 @@ export function useWallet() {
         throw err;
       }
     },
-    [wallet.address, setTransaction, clearTransaction]
+    [wagmiAddress, connector, setTransaction, clearTransaction, refreshBalance]
   );
 
-  return { wallet, disconnect, executeWrite };
+  return { wallet, disconnect, executeWrite, refreshBalance };
 }
